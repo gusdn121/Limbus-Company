@@ -708,8 +708,8 @@ const EGO_LIST = {
     /* WAW */
     {id:'ry-e8',  name:'N사 E.G.O::경멸, 경외 료슈',         grade:'WAW',   season:7},
     {id:'ry-e9',  name:'E.G.O::삼천대세계 료슈',             grade:'WAW',   season:6},
-  
-   
+    /* 발푸밤 */
+    {id:'ry-evp', name:'로보토미 E.G.O::적안 참회 료슈',     grade:'WAW',   season:2},
   ],
   'meursault':[
     /* ZAYIN */
@@ -991,11 +991,17 @@ function updatePassLabel() {
   }
 }
 
+/* 부족 파편 → 필요 상자 수 (상자 1개 = 파편 2개) */
+function shardsToBoxes(shards) {
+  return Math.ceil(shards / 2);
+}
+
 /* 부족 파편(short)을 받기 위해 필요한 거울던전 판수 (퀘스트·보너스 상자 차감 후) */
 function getRunsNeeded(short) {
   if(short <= 0) return 0;
+  const neededBoxes = shardsToBoxes(short);
   const questBoxes = getQuestBoxes();
-  const remaining = Math.max(0, short - questBoxes);
+  const remaining = Math.max(0, neededBoxes - questBoxes);
   if(remaining <= 0) return 0;
   return Math.ceil(remaining / getBoxesPerRun());
 }
@@ -1152,9 +1158,10 @@ function calcTargetSummary() {
     const have   = shards[prisoner.id] || 0;
     const need   = items.reduce((s,id)=>s+shardCost(id.grade), 0);
     const short  = Math.max(0, need - have);
+    const boxes  = shardsToBoxes(short);
     const runs   = getRunsNeeded(short);
     totalCost   += need;
-    totalBoxes  += short;
+    totalBoxes  += boxes;
     totalRuns   += runs;
 
     rows.push(`
@@ -1164,7 +1171,7 @@ function calcTargetSummary() {
           <span style="font-size:11px;color:var(--text3);display:block;margin-top:2px;">${items.map(i=>i.name).join(', ')}</span>
         </span>
         <span style="font-family:var(--mono);font-size:11px;color:var(--text3);white-space:nowrap;">보유 ${have}</span>
-        <span style="font-family:var(--mono);font-size:12px;color:${short>0?'var(--red)':'var(--green)'};white-space:nowrap;">${short>0?'상자 -'+short:'충분'}</span>
+        <span style="font-family:var(--mono);font-size:12px;color:${short>0?'var(--red)':'var(--green)'};white-space:nowrap;">${short>0?'상자 -'+boxes:'충분'}</span>
         <span style="font-family:var(--mono);font-size:12px;color:var(--gold);white-space:nowrap;">${runs>0?runs+'판':'-'}</span>
       </div>`);
   });
@@ -1301,7 +1308,7 @@ function renderCalcShardList() {
             </div>
             <div style="background:var(--bg3);border-radius:4px;padding:8px 10px;">
               <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:3px;">최대 필요 상자</div>
-              <div style="font-size:16px;font-weight:500;color:${short>0?'var(--red)':'var(--green)'};">${short>0?short+'개':'충분'}</div>
+              <div style="font-size:16px;font-weight:500;color:${short>0?'var(--red)':'var(--green)'};">${short>0?shardsToBoxes(short)+'개':'충분'}</div>
             </div>
             <div style="background:var(--bg3);border-radius:4px;padding:8px 10px;">
               <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:3px;">거울던전</div>
@@ -1352,8 +1359,9 @@ function calcAll() {
   Object.values(byPrisoner).forEach(({prisoner, items, have}) => {
     const need  = items.reduce((s,id)=>s+shardCost(id.grade), 0);
     const short = Math.max(0, need - have);
+    const boxes = shardsToBoxes(short);
     const runs  = getRunsNeeded(short);
-    totalBoxes += short;
+    totalBoxes += boxes;
     totalRuns  += runs;
 
     rows.push(`
@@ -1364,7 +1372,7 @@ function calcAll() {
           <span style="display:block;font-size:11px;color:var(--text3);margin-top:2px;">${items.map(i=>i.name).join(', ')}</span>
         </span>
         <span style="font-family:var(--mono);font-size:11px;color:var(--text3);white-space:nowrap;padding-top:2px;">보유 ${have}</span>
-        <span style="font-family:var(--mono);font-size:12px;white-space:nowrap;padding-top:2px;color:${short>0?'var(--red)':'var(--green)'};">${short>0?'상자 -'+short:'충분'}</span>
+        <span style="font-family:var(--mono);font-size:12px;white-space:nowrap;padding-top:2px;color:${short>0?'var(--red)':'var(--green)'};">${short>0?'상자 -'+boxes:'충분'}</span>
         <span style="font-family:var(--mono);font-size:12px;white-space:nowrap;padding-top:2px;color:var(--gold);">${runs>0?runs+'판':'-'}</span>
       </div>`);
   });
