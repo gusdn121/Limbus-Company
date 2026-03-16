@@ -215,25 +215,39 @@ main{max-width:960px;margin:0 auto;padding:2.5rem 2rem 5rem}
     <div class="sec">수감자 파편 현황</div>
     <div id="calc-shard-list"></div>
 
+    <!-- 패스 설정 -->
+    <div class="sec">패스 설정</div>
+    <div class="card" style="padding:12px 16px;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <input type="checkbox" id="m-pass-chk" checked onchange="onMirrorSettingChange()"
+          style="width:18px;height:18px;accent-color:var(--gold);cursor:pointer;flex-shrink:0;">
+        <label for="m-pass-chk" style="font-size:14px;cursor:pointer;color:var(--text2);">림버스 패스 보유</label>
+        <span id="pass-chk-label" style="font-size:13px;color:var(--gold);margin-left:4px;">— 페스당 상자 3개</span>
+      </div>
+    </div>
+
     <!-- 거울던전 설정 -->
     <div class="sec">거울던전 설정</div>
     <div class="card">
       <div class="form-row">
-        <label>패스 보유 여부</label>
-        <select id="m-pass" onchange="onMirrorSettingChange()">
-          <option value="9">림버스 패스 보유 (9개/판)</option>
-          <option value="3">패스 없음 (3개/판)</option>
-        </select>
-      </div>
-      <div class="form-row">
-        <label>보너스 주간 여부</label>
+        <label>목표 기간</label>
         <div style="flex:1;display:flex;align-items:center;gap:10px;">
-          <span class="toggle-track" id="bonus-track" onclick="toggleBonus()" style="display:inline-block;width:36px;height:20px;border-radius:10px;background:var(--bg3);border:1px solid var(--border2);position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;">
-            <span id="bonus-thumb" style="position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:var(--text3);transition:all .2s;"></span>
-          </span>
-          <span id="bonus-label" style="font-size:13px;color:var(--text3);">보너스 없음</span>
+          <input type="number" id="m-days" min="0" value="0" onchange="onMirrorSettingChange()"
+            style="width:90px;flex:none;background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:15px;font-family:var(--mono);padding:7px 10px;outline:none;text-align:right;">
+          <span style="font-size:14px;color:var(--text2);">일</span>
         </div>
       </div>
+      <div class="form-row" id="bonus-mode-row">
+        <label>주간보너스 유형</label>
+        <select id="m-bonus" onchange="onMirrorSettingChange()"
+          style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:14px;font-family:var(--sans);padding:8px 12px;outline:none;">
+          <option value="none">없음 (30XP/판)</option>
+          <option value="hard_once">하드 한번에 받기 (225XP × 주3회)</option>
+          <option value="hard_split">하드 나눠받기 (250XP × 주3회)</option>
+          <option value="normal_split">노말 나눠받기 (135XP × 주3회)</option>
+        </select>
+      </div>
+      <div id="days-xp-label" style="font-size:13px;color:var(--text3);margin-top:6px;padding:8px 10px;background:var(--bg3);border-radius:4px;display:none;"></div>
     </div>
 
     <button class="calc-btn" onclick="calcAll()">계산 →</button>
@@ -797,27 +811,145 @@ function getTotalShardForPrisoner(pid) {
   return shards[pid] || 0;
 }
 
-function toggleBonus() {
-  bonusActive = !bonusActive;
-  const track = document.getElementById('bonus-track');
-  const thumb = document.getElementById('bonus-thumb');
-  const label = document.getElementById('bonus-label');
-  if(bonusActive) {
-    track.style.background = 'rgba(200,169,110,0.3)';
-    track.style.borderColor = 'var(--gold)';
-    thumb.style.left = '18px';
-    thumb.style.background = 'var(--gold)';
-    label.style.color = 'var(--gold)';
-    label.textContent = '보너스 주간 적용 (×2)';
-  } else {
-    track.style.background = 'var(--bg3)';
-    track.style.borderColor = 'var(--border2)';
-    thumb.style.left = '2px';
-    thumb.style.background = 'var(--text3)';
-    label.style.color = 'var(--text3)';
-    label.textContent = '보너스 없음';
+function toggleBonus() {} // 하위 호환용 빈 함수
+
+/* ── 거울던전 설정 공유 헬퍼 ── */
+
+/* 패스 보유 여부 */
+function hasPass() {
+  return document.getElementById('m-pass-chk')?.checked !== false;
+}
+
+/* 거울던전 1판당 상자 수: 1판 = 30XP = 3페스, 패스있음=3상자/페스, 없음=1상자/페스 */
+function getBoxesPerRun() {
+  return hasPass() ? 9 : 3; // 3페스 × (3 or 1)
+}
+function getBasePerRun() { return getBoxesPerRun(); }
+function getPerRun() { return getBoxesPerRun(); }
+
+/* XP → 상자 변환 (패스 여부 반영) */
+function xpToBoxes(xp) {
+  const pes = xp / 10; // 10XP = 1페스
+  return pes * (hasPass() ? 3 : 1);
+}
+
+/* 목요일 12시 기준으로 기간 내 주간 초기화 횟수 계산 */
+function getWeeksInPeriod(days) {
+  if(!days || days <= 0) return 0;
+  const now = new Date();
+  // 다음 목요일 12시까지 남은 시간(ms) 계산
+  // getDay(): 0=일, 1=월, 2=화, 3=수, 4=목, 5=금, 6=토
+  const day = now.getDay();
+  const hour = now.getHours();
+  const min = now.getMinutes();
+
+  // 이번 주 목요일 12:00
+  const thisThursday = new Date(now);
+  const daysToThursday = (4 - day + 7) % 7;
+  thisThursday.setDate(now.getDate() + daysToThursday);
+  thisThursday.setHours(12, 0, 0, 0);
+
+  // 이미 이번 주 목요일 12시가 지났으면 다음 주 목요일
+  const nextReset = new Date(thisThursday);
+  if(now >= thisThursday) nextReset.setDate(thisThursday.getDate() + 7);
+
+  // 기간 종료 시각
+  const end = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
+
+  // 기간 내 목요일 12시 초기화 횟수
+  let count = 0;
+  const cursor = new Date(nextReset);
+  while(cursor <= end) {
+    count++;
+    cursor.setDate(cursor.getDate() + 7);
   }
-  onMirrorSettingChange();
+  return count;
+}
+function getQuestBoxes() {
+  const days = parseInt(document.getElementById('m-days')?.value || 0);
+  if(!days || days <= 0) return 0;
+  const weeks = getWeeksInPeriod(days);
+
+  // 일퀘 + 주간퀘 XP
+  const dailyXP   = days * 10;
+  const weeklyXP  = weeks * 20;
+  const questBoxes = xpToBoxes(dailyXP + weeklyXP);
+
+  // 주간보너스 XP (주 3회)
+  const bonusMode = document.getElementById('m-bonus')?.value || 'none';
+  let bonusXPperWeek = 0;
+  if(bonusMode === 'hard_once')   bonusXPperWeek = 225 * 3;
+  if(bonusMode === 'hard_split')  bonusXPperWeek = 250 * 3;
+  if(bonusMode === 'normal_split')bonusXPperWeek = 135 * 3;
+  const bonusBoxes = xpToBoxes(bonusXPperWeek * weeks);
+
+  // 하루 1판 기본 거울던전 상자
+  const dailyRunBoxes = days * getBoxesPerRun();
+
+  return Math.floor(questBoxes + bonusBoxes + dailyRunBoxes);
+}
+
+/* 기간 라벨 업데이트 */
+function updateDaysLabel() {
+  const el = document.getElementById('days-xp-label');
+  if(!el) return;
+  const days = parseInt(document.getElementById('m-days')?.value || 0);
+  if(!days || days <= 0) { el.style.display = 'none'; return; }
+
+  const weeks = getWeeksInPeriod(days);
+  const bonusMode = document.getElementById('m-bonus')?.value || 'none';
+
+  const dailyXP  = days * 10;
+  const weeklyXP = weeks * 20;
+  const questBoxes = Math.floor(xpToBoxes(dailyXP + weeklyXP));
+
+  let bonusXPperWeek = 0;
+  if(bonusMode === 'hard_once')    bonusXPperWeek = 225 * 3;
+  if(bonusMode === 'hard_split')   bonusXPperWeek = 250 * 3;
+  if(bonusMode === 'normal_split') bonusXPperWeek = 135 * 3;
+  const bonusBoxes = Math.floor(xpToBoxes(bonusXPperWeek * weeks));
+
+  const dailyRunBoxes = days * getBoxesPerRun();
+  const total = questBoxes + bonusBoxes + dailyRunBoxes;
+
+  let txt = `일퀘 ${dailyXP}XP + 주간퀘 ${weeklyXP}XP → 상자 ${questBoxes}개`;
+  if(bonusMode !== 'none' && weeks > 0)
+    txt += ` + 주간보너스 → 상자 ${bonusBoxes}개`;
+  txt += ` + 일일 거울던전 ${dailyRunBoxes}개`;
+  txt += ` <span style="color:var(--text3);font-size:12px;">(주간초기화 ${weeks}회 반영)</span>`;
+  txt += ` = <b style="color:var(--gold)">총 ${total}개</b> 획득 예정`;
+
+  el.innerHTML = txt;
+  el.style.display = 'block';
+}
+
+/* 패스 라벨 업데이트 */
+function updatePassLabel() {
+  const lbl = document.getElementById('pass-chk-label');
+  if(!lbl) return;
+  if(hasPass()) {
+    lbl.textContent = '— 페스당 상자 3개';
+    lbl.style.color = 'var(--gold)';
+  } else {
+    lbl.textContent = '— 페스당 상자 1개';
+    lbl.style.color = 'var(--text3)';
+  }
+}
+
+/* 부족 파편(short)을 받기 위해 필요한 거울던전 판수 (퀘스트·보너스 상자 차감 후) */
+function getRunsNeeded(short) {
+  if(short <= 0) return 0;
+  const questBoxes = getQuestBoxes();
+  const remaining = Math.max(0, short - questBoxes);
+  if(remaining <= 0) return 0;
+  return Math.ceil(remaining / getBoxesPerRun());
+}
+
+function onMirrorSettingChange() {
+  updatePassLabel();
+  updateDaysLabel();
+  if(targetSel.size > 0) calcTargetSummary();
+  if(document.getElementById('p-calc').classList.contains('on')) renderCalcShardList();
 }
 
 /* ── 탭 ── */
@@ -978,8 +1110,10 @@ function calcTargetSummary() {
       </div>`);
   });
 
-  const base = getBasePerRun();
-  const passLabel = bonusActive ? `${base}개/판 + 주간보너스 1회(×2)` : `${base}개/판`;
+  const base = getBoxesPerRun();
+  const questBoxes = getQuestBoxes();
+  const days = parseInt(document.getElementById('m-days')?.value || 0);
+  const passLabel = `${base}개/판${days>0?' · 퀘스트 등 '+questBoxes+'상자 차감':''}`;
   metricsEl.innerHTML = `
     <div class="m-card"><div class="m-label">선택 인격</div><div class="m-val gold">${targetSel.size}개</div></div>
     <div class="m-card"><div class="m-label">총 필요 파편</div><div class="m-val">${totalCost.toLocaleString()}</div></div>
@@ -1058,31 +1192,6 @@ function toggleTargetSection(pid) {
 }
 
 /* ── 거울던전 설정 공유 헬퍼 ── */
-function getBasePerRun() {
-  return parseInt(document.getElementById('m-pass')?.value || 9);
-}
-/* 구버전 호환 — 판당 기본 상자 수만 반환 (보너스는 별도 처리) */
-function getPerRun() {
-  return getBasePerRun();
-}
-/* 부족 파편(short)을 받기 위해 필요한 거울던전 판수 계산
-   보너스 주간이면 주 1회 한도로 1판치 상자를 선공제한 뒤 나머지를 일반 판으로 채움 */
-function getRunsNeeded(short) {
-  if(short <= 0) return 0;
-  const base = getBasePerRun();
-  if(bonusActive) {
-    // 보너스 주간: 1판 돌면 base×2개 획득 (주 1회 한정)
-    const bonusBoxes = base * 2;
-    const afterBonus = Math.max(0, short - bonusBoxes);
-    // 보너스 1판으로 충분하면 1판, 아니면 1판 + 나머지를 일반 판으로
-    return afterBonus === 0 ? 1 : 1 + Math.ceil(afterBonus / base);
-  }
-  return Math.ceil(short / base);
-}
-function onMirrorSettingChange() {
-  if(targetSel.size > 0) calcTargetSummary();
-  if(document.getElementById('p-calc').classList.contains('on')) renderCalcShardList();
-}
 
 /* ── 파편/거울던전 탭 ── */
 
@@ -1203,8 +1312,10 @@ function calcAll() {
 
   document.getElementById('calc-result-detail').innerHTML = rows.join('');
 
-  const base2 = getBasePerRun();
-  const passLabel = bonusActive ? `${base2}개/판 + 주간보너스 1회(×2)` : `${base2}개/판`;
+  const base2 = getBoxesPerRun();
+  const questBoxes2 = getQuestBoxes();
+  const days2 = parseInt(document.getElementById('m-days')?.value || 0);
+  const passLabel = `${base2}개/판${days2>0?' · 퀘스트 등 '+questBoxes2+'상자 차감':''}`;
   document.getElementById('mirror-metrics').innerHTML = `
     <div class="m-card"><div class="m-label">선택 인격</div><div class="m-val gold">${targetSel.size}개</div></div>
     <div class="m-card"><div class="m-label">부족 파편 상자</div><div class="m-val ${totalBoxes>0?'bad':'ok'}">${totalBoxes>0?totalBoxes+'개':'충분'}</div></div>
@@ -1353,6 +1464,7 @@ function confirmReset() {
 
 /* ── 초기화 ── */
 renderCalcShardList();
+updatePassLabel();
 
 /* ── 테마 ── */
 function toggleTheme() {
