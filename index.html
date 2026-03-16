@@ -77,6 +77,17 @@ main{max-width:960px;margin:0 auto;padding:2.5rem 2rem 5rem}
 /* info box */
 .info-box{border:1px solid var(--border);border-left:2px solid var(--gold);background:var(--bg2);border-radius:4px;padding:12px 16px;font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:1.5rem}
 .info-box b{color:var(--gold);font-weight:500}
+/* 사용 안내 */
+.guide-toggle{width:100%;background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--text3);font-size:13px;font-family:var(--mono);padding:7px 14px;cursor:pointer;text-align:left;margin-bottom:1rem;transition:all .2s;display:flex;align-items:center;gap:8px;}
+.guide-toggle:hover{border-color:var(--border2);color:var(--text2)}
+.guide-toggle .g-arrow{transition:transform .2s;font-size:10px;}
+.guide-toggle.open .g-arrow{transform:rotate(90deg)}
+.guide-box{display:none;background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:16px 18px;margin-bottom:1.5rem;font-size:13px;color:var(--text2);line-height:1.9;}
+.guide-box.on{display:block}
+.guide-box h4{font-size:12px;font-family:var(--mono);letter-spacing:.12em;color:var(--gold);text-transform:uppercase;margin:12px 0 6px;border-bottom:1px solid var(--border);padding-bottom:4px;}
+.guide-box h4:first-child{margin-top:0}
+.guide-box li{margin-left:16px;margin-bottom:3px;}
+.guide-box b{color:var(--text);font-weight:500}
 
 /* card / form */
 .card{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:20px}
@@ -206,9 +217,28 @@ main{max-width:960px;margin:0 auto;padding:2.5rem 2rem 5rem}
 
   <!-- 파편 / 거울던전 -->
   <div class="panel on" id="p-calc">
-    <div class="info-box">
-      인격 보관함에서 저장한 <b>수감자별 파편 수</b>와 목표 인격 탭에서 <b>선택한 인격</b>을 바탕으로<br>
-      부족한 파편 상자와 필요한 거울던전 횟수를 계산합니다.
+    <button class="guide-toggle" onclick="toggleGuide('guide-calc',this)"><span class="g-arrow">▶</span> 사용 방법 안내</button>
+    <div class="guide-box" id="guide-calc">
+      <h4>① 인격 보관함 탭</h4>
+      <ul>
+        <li>수감자 섹션의 <b>파편 수 입력칸</b>에 현재 보유 파편 수를 입력하세요.</li>
+      </ul>
+      <h4>② 목표 인격 탭</h4>
+      <ul>
+        <li>파편으로 뽑고 싶은 인격/에고 카드를 <b>클릭해서 선택</b>하세요. (복수 선택 가능)</li>
+      </ul>
+      <h4>③ 이 탭에서 설정 후 계산</h4>
+      <ul>
+        <li><b>패스 보유</b> 체크 — 패스 있으면 페스당 상자 3개, 없으면 1개</li>
+        <li><b>목표 기간(일)</b> 입력 — 기간 내 일퀘·주간퀘·일일 거울던전 상자를 자동 차감</li>
+        <li><b>주간보너스 유형</b> 선택 — 하드/노말 및 받는 방식에 따라 추가 상자 반영</li>
+        <li><b>계산 →</b> 버튼을 누르면 필요한 거울던전 추가 판수가 나와요.</li>
+      </ul>
+      <h4>계산 원리</h4>
+      <ul>
+        <li>거울던전 1판 = 30XP = 3페스, 주간퀘 20XP/주, 일퀘 10XP/일</li>
+        <li>주간 초기화는 <b>매주 목요일 12시</b> 기준으로 계산됩니다.</li>
+      </ul>
     </div>
 
     <!-- 수감자 파편 현황 (보관함 연동) -->
@@ -263,9 +293,19 @@ main{max-width:960px;margin:0 auto;padding:2.5rem 2rem 5rem}
 
   <!-- 목표 인격 -->
   <div class="panel" id="p-target">
-    <div class="info-box">
-      목표 인격/에고를 <b>복수 선택</b>하면 수감자별 필요 파편과 거울던전 횟수를 계산합니다.<br>
-      카드를 클릭해서 선택하고, 다시 클릭하면 해제됩니다.
+    <button class="guide-toggle" onclick="toggleGuide('guide-target',this)"><span class="g-arrow">▶</span> 사용 방법 안내</button>
+    <div class="guide-box" id="guide-target">
+      <h4>목표 인격 선택</h4>
+      <ul>
+        <li>파편으로 획득하고 싶은 <b>인격 또는 에고 카드를 클릭</b>해서 선택하세요.</li>
+        <li>이미 <b>보관함에 보유 중인 항목</b>은 목록에 표시되지 않아요.</li>
+        <li>선택하면 위에 <b>수감자별 필요 파편·거울던전 요약</b>이 바로 표시돼요.</li>
+        <li>카드를 다시 클릭하면 선택이 해제됩니다.</li>
+      </ul>
+      <h4>필터</h4>
+      <ul>
+        <li>★3 / ★2 / ★1 / 에고 / 발푸밤 버튼으로 원하는 등급만 볼 수 있어요.</li>
+      </ul>
     </div>
 
     <!-- 요약 결과 (선택 시 표시) -->
@@ -293,8 +333,23 @@ main{max-width:960px;margin:0 auto;padding:2.5rem 2rem 5rem}
 
   <!-- 인격 보관함 -->
   <div class="panel" id="p-collection">
-    <div class="info-box">
-      인격 카드를 클릭해서 <b>보유 여부</b>를 표시하세요. 데이터는 이 기기 브라우저에 <b>자동 저장</b>됩니다.
+    <button class="guide-toggle" onclick="toggleGuide('guide-coll',this)"><span class="g-arrow">▶</span> 사용 방법 안내</button>
+    <div class="guide-box" id="guide-coll">
+      <h4>보유 여부 체크</h4>
+      <ul>
+        <li>인격/에고 카드를 <b>클릭</b>하면 보유 중으로 표시돼요. 다시 클릭하면 해제.</li>
+        <li>보유로 체크한 항목은 <b>목표 인격 탭에서 자동으로 제외</b>됩니다.</li>
+      </ul>
+      <h4>파편 수 입력</h4>
+      <ul>
+        <li>수감자 이름 옆 <b>파편 수 입력칸</b>에 현재 보유 파편을 입력하세요.</li>
+        <li>입력한 파편 수는 <b>파편/거울던전 탭 계산에 자동 반영</b>됩니다.</li>
+      </ul>
+      <h4>데이터 저장</h4>
+      <ul>
+        <li>모든 데이터는 <b>이 기기 브라우저에 자동 저장</b>돼요.</li>
+        <li>다른 기기에서는 별도로 입력해야 합니다.</li>
+      </ul>
     </div>
     <div class="coll-stats" id="coll-stats"></div>
     <div class="filter-bar">
@@ -966,7 +1021,9 @@ function sw(id) {
 
 /* ── 목표 인격 ── */
 let targetFilter = 'all';
-let targetSel = new Set(); // 선택된 인격 id Set
+let targetSel = new Set(JSON.parse(localStorage.getItem('lc-target')||'[]')); // 선택된 인격 id Set
+
+const saveTarget = () => localStorage.setItem('lc-target', JSON.stringify([...targetSel]));
 
 function setTargetFilter(f, btn) {
   targetFilter = f;
@@ -1024,6 +1081,7 @@ function toggleTargetSel(iid) {
   } else {
     targetSel.add(iid);
   }
+  saveTarget();
   // 해당 카드만 즉시 다시 그리기
   const card = document.querySelector(`[data-tid="${iid}"]`);
   if(card) {
@@ -1058,6 +1116,7 @@ function toggleTargetSel(iid) {
 
 function clearTargetSel() {
   targetSel.clear();
+  saveTarget();
   document.querySelectorAll('.t-sel').forEach(c=>c.classList.remove('t-sel'));
   calcTargetSummary();
 }
@@ -1382,6 +1441,7 @@ function toggleId(key) {
   // 보유로 바꿨을 때 targetSel에서도 제거
   if(owned.has(key) && targetSel.has(key)) {
     targetSel.delete(key);
+    saveTarget();
     calcTargetSummary();
   }
 }
@@ -1463,6 +1523,13 @@ function confirmReset() {
 }
 
 /* ── 초기화 ── */
+function toggleGuide(id, btn) {
+  const box = document.getElementById(id);
+  if(!box) return;
+  const isOpen = box.classList.toggle('on');
+  btn.classList.toggle('open', isOpen);
+}
+
 renderCalcShardList();
 updatePassLabel();
 
