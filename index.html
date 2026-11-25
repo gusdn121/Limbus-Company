@@ -686,7 +686,7 @@ const IDENTITIES = {
 
 const WEDGE_PAIR = ['do-vp-3b', 'si-vp-3b'];
 
-/* E.G.O 목록 — season: 0=통상, 1~7=시즌 패스, 'vp'=발푸르기스의 밤 한정, 'event'=이벤트 */
+/* E.G.O 목록 — season: 0=통상, 1~8=시즌 (패스 포함), 'vp'=발푸르기스의 밤 한정, 'event'=이벤트 */
 const EGO_LIST = {
   'yi-sang':[
     /* ZAYIN (★2) */
@@ -698,6 +698,7 @@ const EGO_LIST = {
     /* HE (★3) */
     {id:'ys-e5',  name:'E.G.O::차원찢개 이상',         grade:'HE', season:0},
     {id:'ys-e6',  name:'E.G.O::흉탄 이상',             grade:'HE', season:5},
+    {id:'ys-e9',  name:'E.G.O::엄숙한 애도 이상',                grade:'HE',    season:'vp'},
     /* WAW (★3) */
     {id:'ys-e7',  name:'E.G.O::여우비 이상',           grade:'WAW', season:2},
     {id:'ys-e8',  name:'E.G.O::삼천대세계 이상',       grade:'WAW', season:6},
@@ -717,10 +718,12 @@ const EGO_LIST = {
     {id:'fa-e9',  name:'E.G.O::홍염살 파우스트',       grade:'HE',    season:7},
     /* WAW */
     {id:'fa-e10', name:'E.G.O::영속 파우스트',         grade:'WAW',   season:4},
+    {id:'fa-e11', name:'E.G.O::구멍 파우스트',                  grade:'WAW',   season:8},
   ],
   'don':[
     /* ZAYIN */
     {id:'do-e1',  name:'E.G.O::라 샹그레 데 산쵸 돈키호테', grade:'ZAYIN', season:0},
+    {id:'do-e10', name:'E.G.O::난 가위를 낼게, 너는? 돈키호테',       grade:'ZAYIN', season:7},
     /* TETH */
     {id:'do-e2',  name:'E.G.O::평생 스튜 돈키호테',          grade:'TETH',  season:0},
     {id:'do-e3',  name:'E.G.O::소망석 돈키호테',             grade:'TETH',  season:0},
@@ -760,15 +763,18 @@ const EGO_LIST = {
     /* HE */
     {id:'me-e5',  name:'E.G.O::집행 뫼르소',            grade:'HE',    season:2},
     {id:'me-e6',  name:'E.G.O::카포테 뫼르소',          grade:'HE',    season:0},
+    {id:'me-e9',  name:'E.G.O::착영휘도 [着影揮刀] 뫼르소',          grade:'HE',    season:'event'},
     /* WAW */
     {id:'me-e7',  name:'E.G.O::갈망 - 미르칼라 뫼르소', grade:'WAW',   season:5},
     {id:'me-e8',  name:'E.G.O::분쇄될 과거 뫼르소',     grade:'WAW',   season:1},
+    {id:'me-e10', name:'E.G.O::구멍 뫼르소',                   grade:'WAW',   season:8},
     /* 발푸밤 */
     {id:'me-evp', name:'E.G.O::TETH 후회 뫼르소',       grade:'TETH',  season:'vp'},
   ],
   'hong-lu':[
     /* ZAYIN */
     {id:'hl-e1',  name:'E.G.O::허환경 홍루',             grade:'ZAYIN', season:0},
+    {id:'hl-e10', name:'E.G.O::거절선포 홍루',                  grade:'ZAYIN', season:8},
     /* TETH */
     {id:'hl-e2',  name:'E.G.O::분홍욕망 홍루',           grade:'TETH',  season:0},
     {id:'hl-e3',  name:'E.G.O::소다 홍루',               grade:'TETH',  season:0},
@@ -778,6 +784,7 @@ const EGO_LIST = {
     {id:'hl-e6',  name:'E.G.O::차원찢개 홍루',           grade:'HE',    season:0},
     {id:'hl-e7',  name:'E.G.O::들끓는 부식 홍루',        grade:'HE',    season:3},
     {id:'hl-e8',  name:'E.G.O::영작오 [宁作吾] 홍루',    grade:'HE',    season:6},
+    {id:'hl-e11', name:'E.G.O::눈물로 벼려낸 검 홍루',             grade:'HE',    season:'vp'},
     /* WAW */
     {id:'hl-e9',  name:'E.G.O::오혈읍루 [汚血泣淚] 홍루', grade:'WAW',  season:7},
   ],
@@ -817,9 +824,11 @@ const EGO_LIST = {
   'rodion':[
     /* ZAYIN */
     {id:'ro-e1',  name:'E.G.O::던져지는 것 로쟈',       grade:'ZAYIN', season:0},
+    {id:'ro-e9',  name:'E.G.O::노을 속으로 로쟈',                grade:'ZAYIN', season:'event'},
     /* TETH */
     {id:'ro-e2',  name:'E.G.O::얼음다리 로쟈',          grade:'TETH',  season:0},
     {id:'ro-e3',  name:'E.G.O::들끓는 부식 로쟈',       grade:'TETH',  season:0},
+    {id:'ro-e10', name:'E.G.O::거울촉각 로쟈',                  grade:'TETH',  season:8},
     /* HE */
     {id:'ro-e4',  name:'E.G.O::4번째 성냥불 로쟈',      grade:'HE',    season:2},
     {id:'ro-e5',  name:'E.G.O::집행 로쟈',              grade:'HE',    season:2},
@@ -867,6 +876,7 @@ const EGO_LIST = {
     /* TETH */
     {id:'gr-e3',  name:'E.G.O::초롱 그레고르',           grade:'TETH', season:0},
     {id:'gr-e4',  name:'E.G.O::지난 날 그레고르',        grade:'TETH', season:0},
+    {id:'gr-e10', name:'E.G.O::입주 신고 그레고르',               grade:'TETH',  season:7},
     /* HE */
     {id:'gr-e5',  name:'E.G.O::AEDD 그레고르',           grade:'HE', season:2},
     {id:'gr-e6',  name:'E.G.O::엄숙한 애도 그레고르',    grade:'HE', season:0},
