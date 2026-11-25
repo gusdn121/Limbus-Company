@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>림버스 컴퍼니 — 재화 계산기</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #0d0c0b;
@@ -49,26 +49,266 @@ html.light {
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-size:16px;font-family:var(--sans);font-weight:300;min-height:100vh;line-height:1.6}
 
-/* header */
-header{position:relative;border-bottom:1px solid var(--border);padding:0 2rem;overflow:hidden}
-.h-inner{max-width:960px;margin:0 auto;padding:2.5rem 0 2rem;position:relative;z-index:1}
-.h-eye{font-family:var(--mono);font-size:13px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:.75rem;opacity:.8}
-.h-title{font-family:var(--serif);font-size:clamp(1.6rem,4vw,2.4rem);font-weight:700;color:var(--text);letter-spacing:-.01em;line-height:1.2}
-.h-title span{color:var(--gold)}
-.h-sub{margin-top:.6rem;font-size:15px;color:var(--text2);font-weight:300}
-.h-deco{position:absolute;right:-60px;top:-40px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(200,169,110,.04) 0%,transparent 70%);pointer-events:none}
-.h-line{width:40px;height:1px;background:var(--gold);opacity:.4;margin:1rem 0 0}
-
-/* nav */
-nav{border-bottom:1px solid var(--border);padding:0 2rem;position:sticky;top:0;background:var(--bg);backdrop-filter:blur(8px);z-index:100;opacity:0.97}
-.nav-inner{max-width:960px;margin:0 auto;display:flex}
-.nav-btn{padding:1rem 1.5rem;font-family:var(--sans);font-size:15px;font-weight:400;color:var(--text3);background:transparent;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:all .2s;letter-spacing:.02em;white-space:nowrap}
-.nav-btn:hover{color:var(--text2)}
-.nav-btn.on{color:var(--gold);border-bottom-color:var(--gold);font-weight:500}
-
 /* main */
 main{max-width:960px;margin:0 auto;padding:2.5rem 2rem 5rem}
 .panel{display:none}.panel.on{display:block}
+[hidden]{display:none!important}
+
+/* 관리자 메뉴 */
+.site-header {
+  background: linear-gradient(90deg, #4c1718, #241315 56%, #141211);
+  border-bottom: 1px solid #64422b;
+}
+.site-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  max-width: 960px;
+  min-height: 52px;
+  margin: 0 auto;
+  padding: 6px 2rem;
+}
+.site-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: #f5dfb7;
+  font-weight: 900;
+  text-decoration: none;
+}
+.site-brand::before {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  transform: rotate(45deg);
+  border: 1px solid #e0a85c;
+  background: #7a261e;
+  box-shadow: inset 0 0 0 2px #291615;
+  content: "";
+}
+.site-header .theme-btn { min-height: 36px; }
+.light .site-header {
+  background: linear-gradient(90deg, #e4c2a6, #f0e1d2 58%, #f5f2ed);
+  border-color: #c1a58c;
+}
+.light .site-brand { color: #542824; }
+
+.admin-home {
+  --menu-cut: polygon(12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px), 0 12px);
+  --menu-ink: #f5dfb7;
+  --menu-accent: #ffda94;
+  --menu-muted: #c0a887;
+  --menu-rim: linear-gradient(158deg, #a37648, #61412c 28%, #341f1b 63%, #8f6039);
+  --menu-screen: #15110f;
+  --menu-scanline: #0003;
+  --menu-land: #261a13;
+  --menu-main: linear-gradient(112deg, #4b191a, #321416 54%, #1b1110);
+  --menu-main-hover: linear-gradient(112deg, #60201f, #401717 54%, #251411);
+  --menu-secondary: linear-gradient(110deg, #392019, #251914);
+  --menu-placeholder: #211915;
+  --menu-rule: #65422f;
+  --menu-badge: #211310;
+  --menu-badge-ink: #f0bf69;
+  color: var(--menu-ink);
+}
+.light .admin-home {
+  --menu-ink: #3e2820;
+  --menu-accent: #4e2020;
+  --menu-muted: #6a5140;
+  --menu-rim: linear-gradient(158deg, #b7895a, #8d6241 34%, #b28a6b 67%, #7c553e);
+  --menu-screen: #f2e7d9;
+  --menu-scanline: #6746280e;
+  --menu-land: #e9d7c4;
+  --menu-main: linear-gradient(112deg, #e9bfae, #eed8c5 68%, #e6cfc0);
+  --menu-main-hover: linear-gradient(112deg, #e8b49f, #f0dfca 68%, #e9cfb9);
+  --menu-secondary: linear-gradient(110deg, #e7ccad, #f4e7d6);
+  --menu-placeholder: #ede0d0;
+  --menu-rule: #ac8a72;
+  --menu-badge: #f3e0c7;
+  --menu-badge-ink: #794325;
+}
+.menu-rim {
+  padding: 7px;
+  clip-path: var(--menu-cut);
+  background: var(--menu-rim);
+}
+.menu-screen {
+  min-height: 344px;
+  padding: clamp(18px, 4vw, 36px);
+  clip-path: var(--menu-cut);
+  background: repeating-linear-gradient(0deg, var(--menu-scanline) 0 1px, transparent 1px 4px),
+    radial-gradient(ellipse at 0 0, var(--menu-land), transparent 75%), var(--menu-screen);
+  box-shadow: inset 0 0 0 2px var(--menu-screen), inset 0 0 0 3px var(--menu-rule);
+}
+.menu-heading {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: 20px;
+}
+.menu-heading h1, .tool-heading {
+  font-size: clamp(26px, 5.4vw, 52px);
+  line-height: 1.16;
+  letter-spacing: -0.065em;
+  font-weight: 900;
+}
+.menu-heading::after {
+  height: 4px;
+  flex: 1;
+  border-block: 1px solid var(--menu-rule);
+  background: linear-gradient(90deg, #7e3428, transparent 80%);
+  content: "";
+}
+.menu-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+  gap: 11px;
+}
+.menu-card {
+  min-width: 0;
+  text-decoration: none;
+  color: var(--menu-accent);
+}
+.menu-card--primary {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  min-height: 206px;
+  grid-row: span 2;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 19px 20px 20px;
+}
+.menu-card--primary::before, .menu-card--primary::after {
+  position: absolute;
+  clip-path: var(--menu-cut);
+  content: "";
+  pointer-events: none;
+}
+.menu-card--primary::before {
+  z-index: -2;
+  inset: 0;
+  background: linear-gradient(150deg, #ffd17a, #a9733d 44%, #684325 68%, #c08750);
+}
+.menu-card--primary::after {
+  z-index: -1;
+  inset: 3px;
+  background: repeating-linear-gradient(0deg, var(--menu-scanline) 0 1px, transparent 1px 4px), var(--menu-main);
+  box-shadow: inset 0 0 0 3px #762a28, inset 0 0 0 4px #966145;
+}
+.menu-card--primary:hover::before { background: #f5ce83; }
+.menu-card--primary:hover::after {
+  background: repeating-linear-gradient(0deg, var(--menu-scanline) 0 1px, transparent 1px 4px), var(--menu-main-hover);
+}
+.menu-icon-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+.menu-icon {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  flex: none;
+  place-items: center;
+  border: 1px solid var(--menu-rule);
+  background: var(--menu-badge);
+  color: var(--menu-badge-ink);
+  line-height: 1;
+}
+.menu-card--primary .menu-icon {
+  width: 47px;
+  height: 40px;
+  border-color: #997043;
+  box-shadow: inset 0 0 0 2px #8b543540;
+}
+.menu-icon--layers::before, .menu-icon--archive::before {
+  width: 12px;
+  height: 8px;
+  border: 1px solid currentColor;
+  box-shadow: 0 3px 0 -1px currentColor;
+  content: "";
+}
+.menu-icon--layers::before {
+  width: 17px;
+  height: 12px;
+  transform: skew(-13deg);
+}
+.menu-arrow { color: var(--menu-badge-ink); font-size: 19px; line-height: 1; }
+.menu-card--primary .menu-arrow { font-size: 24px; }
+.menu-name {
+  font-size: clamp(15px, 2.5vw, 21px);
+  line-height: 1.2;
+  letter-spacing: -0.045em;
+  font-weight: 900;
+}
+.menu-card--primary .menu-name { font-size: clamp(26px, 4.2vw, 39px); }
+.menu-card--small {
+  display: flex;
+  min-height: 92px;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 17px;
+  border: 1px solid var(--menu-rule);
+  background: repeating-linear-gradient(0deg, var(--menu-scanline) 0 1px, transparent 1px 4px), var(--menu-secondary);
+  box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--menu-screen) 46%, transparent);
+}
+.menu-card--small .menu-name { flex: 1; }
+a.menu-card--small:hover { border-color: var(--menu-badge-ink); }
+.menu-card--pending { color: var(--menu-muted); background: var(--menu-placeholder); font-weight: 700; }
+.menu-card:focus-visible, .tool-back:focus-visible, .nav-btn:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+/* 도구 화면 */
+.tool-back, .guide-box a, .settings-link { color: var(--gold2); }
+.tool-back {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+}
+.tool-back:hover, .nav-btn:hover { color: var(--gold); }
+.tool-heading { margin: 4px 0 16px; }
+.tool-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 16px;
+  padding-bottom: 11px;
+  border-bottom: 1px solid var(--border2);
+}
+.nav-btn {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  padding: 6px 10px;
+  border: 1px solid var(--border2);
+  background: var(--bg2);
+  color: var(--text2);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+}
+.nav-btn[aria-current="page"] { border-color: var(--gold); background: var(--red-dim); color: var(--gold2); }
+
+@media(max-width:600px) {
+  .site-header-inner { padding-inline: 1rem; }
+}
+@media(max-width:535px) {
+  .menu-screen { min-height: 0; padding: 18px 14px; }
+  .menu-heading { margin-bottom: 15px; }
+  .menu-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .menu-card--primary { grid-column: 1 / -1; grid-row: auto; min-height: 145px; }
+  .menu-card--small { min-height: 65px; padding: 9px; gap: 6px; font-size: 13px; }
+  a.menu-card--small .menu-icon { display: none; }
+}
 
 /* labels */
 .sec{font-family:var(--mono);font-size:12px;letter-spacing:.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;margin-top:2rem}
@@ -173,7 +413,6 @@ main{max-width:960px;margin:0 auto;padding:2.5rem 2rem 5rem}
 /* responsive */
 @media(max-width:600px){
   main{padding:1.5rem 1rem 3rem}
-  header,nav{padding:0 1rem}
   .form-row{flex-direction:column;align-items:flex-start}
   .form-row label{min-width:unset}
   .form-row input,.form-row select{width:100%}
@@ -190,44 +429,61 @@ main{max-width:960px;margin:0 auto;padding:2.5rem 2rem 5rem}
 </head>
 <body>
 
-<header>
-  <div class="h-deco"></div>
-  <div class="h-inner">
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;">
-      <div>
-        <div class="h-eye">Limbus Company · Resource Calculator</div>
-        <h1 class="h-title">림버스 컴퍼니<br><span>재화 계산기</span></h1>
-        <p class="h-sub">수감자 파편 · 거울던전 · 인격 보관함</p>
-        <div class="h-line"></div>
-      </div>
-      <button class="theme-btn" id="theme-toggle" onclick="toggleTheme()" style="margin-top:6px;flex-shrink:0;">☀ 라이트</button>
-    </div>
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-brand" href="#home">림버스 컴퍼니</a>
+    <button class="theme-btn" id="theme-toggle" type="button" onclick="toggleTheme()">☀ 라이트</button>
   </div>
 </header>
 
-<nav>
-  <div class="nav-inner">
-    <button class="nav-btn on"  onclick="sw('calc')">파편 / 거울던전</button>
-    <button class="nav-btn"     onclick="sw('target')">목표 인격</button>
-    <button class="nav-btn"     onclick="sw('collection')">인격 보관함</button>
-  </div>
-</nav>
-
 <main>
+  <section class="admin-home" id="admin-home" aria-labelledby="admin-title">
+    <div class="menu-rim">
+      <div class="menu-screen">
+        <div class="menu-heading"><h1 id="admin-title" tabindex="-1">관리자 메뉴</h1></div>
+        <div class="menu-grid">
+          <a class="menu-card menu-card--primary" href="#mirror-dungeon">
+            <span class="menu-icon-row" aria-hidden="true">
+              <span class="menu-icon menu-icon--layers"></span>
+              <span class="menu-arrow">→</span>
+            </span>
+            <span class="menu-name">거울던전</span>
+          </a>
+          <a class="menu-card menu-card--small" href="#dispenser">
+            <span class="menu-icon menu-icon--archive" aria-hidden="true"></span>
+            <span class="menu-name">인격 자판기</span>
+            <span class="menu-arrow" aria-hidden="true">→</span>
+          </a>
+          <div class="menu-card menu-card--small menu-card--pending">
+            <span class="menu-icon" aria-hidden="true">+</span>
+            <span>추가 예정</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="tool-workspace" hidden>
+  <a class="tool-back" href="#home">← 관리자 메뉴</a>
+  <h1 class="tool-heading" id="tool-title" tabindex="-1"></h1>
+  <nav class="tool-tabs" id="dispenser-tabs" aria-label="인격 자판기 메뉴" hidden>
+    <a class="nav-btn" href="#dispenser">목표 인격</a>
+    <a class="nav-btn" href="#collection">인격 보관함</a>
+  </nav>
 
   <!-- 파편 / 거울던전 -->
-  <div class="panel on" id="p-calc">
+  <div class="panel" id="p-calc">
     <button class="guide-toggle" onclick="toggleGuide('guide-calc',this)"><span class="g-arrow">▶</span> 사용 방법 안내</button>
     <div class="guide-box" id="guide-calc">
-      <h4>① 인격 보관함 탭</h4>
+      <h4>① <a href="#collection">인격 보관함</a></h4>
       <ul>
         <li>수감자 섹션의 <b>파편 수 입력칸</b>에 현재 보유 파편 수를 입력하세요.</li>
       </ul>
-      <h4>② 목표 인격 탭</h4>
+      <h4>② <a href="#dispenser">목표 인격</a></h4>
       <ul>
         <li>파편으로 뽑고 싶은 인격/에고 카드를 <b>클릭해서 선택</b>하세요. (복수 선택 가능)</li>
       </ul>
-      <h4>③ 이 탭에서 설정 후 계산</h4>
+      <h4>③ 거울던전 설정 후 계산</h4>
       <ul>
         <li><b>패스 보유</b> 체크 — 패스 있으면 페스당 상자 3개, 없으면 1개</li>
         <li><b>목표 기간(일)</b> 입력 — 기간 내 일퀘·주간퀘·일일 거울던전 상자를 자동 차감</li>
@@ -318,7 +574,7 @@ main{max-width:960px;margin:0 auto;padding:2.5rem 2rem 5rem}
       <div id="target-summary-detail"></div>
       <div style="margin-top:1rem;">
         <button class="filter-btn" style="color:var(--red);border-color:rgba(196,92,74,.3);" onclick="clearTargetSel()">선택 초기화</button>
-        <span style="font-size:11px;color:var(--text3);margin-left:10px;">패스·보너스 설정은 파편/거울던전 탭에서 변경</span>
+        <span style="font-size:11px;color:var(--text2);margin-left:10px;">패스·보너스 설정은 <a class="settings-link" href="#mirror-dungeon">거울던전</a>에서 변경</span>
       </div>
     </div>
 
@@ -345,7 +601,7 @@ main{max-width:960px;margin:0 auto;padding:2.5rem 2rem 5rem}
       <h4>파편 수 입력</h4>
       <ul>
         <li>수감자 이름 옆 <b>파편 수 입력칸</b>에 현재 보유 파편을 입력하세요.</li>
-        <li>입력한 파편 수는 <b>파편/거울던전 탭 계산에 자동 반영</b>됩니다.</li>
+        <li>입력한 파편 수는 <b>거울던전 계산에 자동 반영</b>됩니다.</li>
       </ul>
       <h4>데이터 저장</h4>
       <ul>
@@ -370,6 +626,7 @@ main{max-width:960px;margin:0 auto;padding:2.5rem 2rem 5rem}
     <div id="coll-body"></div>
   </div>
 
+  </div>
 </main>
 
 <footer style="border-top:1px solid var(--border);padding:2rem;text-align:center;font-size:11px;color:var(--text3);font-family:var(--mono);letter-spacing:.08em;">
@@ -956,19 +1213,48 @@ function onMirrorSettingChange() {
   if(document.getElementById('p-calc').classList.contains('on')) renderCalcShardList();
 }
 
-/* ── 탭 ── */
-const TABS = ['calc','target','collection'];
-function sw(id) {
-  TABS.forEach((t,i)=>{
-    document.getElementById('p-'+t).classList.toggle('on',t===id);
-    document.querySelectorAll('.nav-btn')[i].classList.toggle('on',t===id);
-  });
-  if(id==='collection') renderCollection();
-  if(id==='target') {
-    renderTargetList();
-    calcTargetSummary();
+/* ── 화면 이동 ── */
+const TOOL_VIEWS = new Map([
+  ['#mirror-dungeon', {tab:'calc', title:'거울던전'}],
+  ['#dispenser', {tab:'target', title:'인격 자판기'}],
+  ['#collection', {tab:'collection', title:'인격 자판기'}],
+]);
+
+function renderToolView(moveFocus = false) {
+  const view = TOOL_VIEWS.get(location.hash);
+  const home = document.getElementById('admin-home');
+  const workspace = document.getElementById('tool-workspace');
+  const heading = document.getElementById('tool-title');
+  const tabs = document.getElementById('dispenser-tabs');
+  const screenChanged = home.hidden !== Boolean(view) || (view && heading.textContent !== view.title);
+
+  home.hidden = Boolean(view);
+  workspace.hidden = !view;
+  tabs.hidden = !view || view.tab === 'calc';
+
+  for(const panel of workspace.querySelectorAll('.panel')) {
+    panel.classList.toggle('on', panel.id === 'p-' + view?.tab);
   }
-  if(id==='calc') renderCalcShardList();
+  for(const link of tabs.querySelectorAll('.nav-btn')) {
+    if(link.hash === location.hash) link.setAttribute('aria-current', 'page');
+    else link.removeAttribute('aria-current');
+  }
+
+  if(view) {
+    heading.textContent = view.title;
+    if(view.tab === 'calc') renderCalcShardList();
+    if(view.tab === 'collection') renderCollection();
+    if(view.tab === 'target') {
+      renderTargetList();
+      calcTargetSummary();
+    }
+  }
+
+  if(moveFocus && screenChanged) {
+    const screenHeading = view ? heading : document.getElementById('admin-title');
+    screenHeading.focus({preventScroll:true});
+    window.scrollTo({top:0, behavior:'instant'});
+  }
 }
 
 /* ── 목표 인격 ── */
@@ -1578,8 +1864,9 @@ function toggleGuide(id, btn) {
   btn.classList.toggle('open', isOpen);
 }
 
-renderCalcShardList();
 updatePassLabel();
+window.addEventListener('hashchange', () => renderToolView(true));
+renderToolView();
 
 /* ── 테마 ── */
 function toggleTheme() {
