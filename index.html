@@ -1087,8 +1087,7 @@ function renderCatalogMetadata(item) {
     'event-reward': [`${seasonLabel} 이벤트 보상`, '#c46c5a'],
   };
   const [label, color] = tags[item.source] || [seasonLabel, item.season ? '#c8a96e' : '#5a5248'];
-  return `<span style="font-size:13px;padding:2px 7px;border-radius:2px;background:${color}22;color:${color};border:1px solid ${color}44;">${label}</span>
-    <time datetime="${item.releaseDate}" style="font-size:11px;color:var(--text2);">${item.releaseDate}</time>`;
+  return `<span style="font-size:13px;padding:2px 7px;border-radius:2px;background:${color}22;color:${color};border:1px solid ${color}44;">${label}</span>`;
 }
 
 function toggleTargetSel(iid) {
