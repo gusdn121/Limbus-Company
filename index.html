@@ -302,6 +302,7 @@ main{max-width:960px;margin:0 auto;padding:2.5rem 2rem 5rem}
         <li>이미 <b>보관함에 보유 중인 항목</b>은 목록에 표시되지 않아요.</li>
         <li>선택하면 위에 <b>수감자별 필요 파편·거울던전 요약</b>이 바로 표시돼요.</li>
         <li>카드를 다시 클릭하면 선택이 해제됩니다.</li>
+        <li>쐐기 사무소 해결사 돈키호테와 싱클레어는 함께 선택됩니다. 자판기 교환이 가능해지면 두 수감자의 파편이 각각 1개 이상, 합계 400개 필요합니다.</li>
       </ul>
       <h4>필터</h4>
       <ul>
@@ -392,7 +393,7 @@ const PRISONERS = [
 ];
 
 /* 인격 목록 — 새 인격 추가 시 여기에 항목 추가 */
-/* season: 0=통상, 1~7=시즌, 'vp'=발푸르기스의 밤 한정, 'ego'=에고 */
+/* season: 0=통상, 1~8=시즌, 'vp'=발푸르기스의 밤 한정, 'ego'=에고 */
 const IDENTITIES = {
   'yi-sang':[
     /* ★1 */
@@ -415,6 +416,7 @@ const IDENTITIES = {
     {id:'ys-s6-3a', name:'N사 E.G.O::흉탄 이상',          grade:3, season:6},
     {id:'ys-s6-3b', name:'흑수 - 오 필두 이상',            grade:3, season:6},
     {id:'ys-s7-3a', name:'거미집 검지 아비 이상',           grade:3, season:7},
+    {id:'ys-s7-3b', name:'LCE E.G.O::차원찢개 이상',             grade:3, season:7},
     /* ★3 발푸밤 */
     {id:'ys-vp-3a', name:'로보토미 E.G.O::엄숙한 애도 이상', grade:3, season:'vp'},
   ],
@@ -440,9 +442,10 @@ const IDENTITIES = {
     {id:'fa-s6-3a', name:'흑수 - 묘 필두 파우스트',          grade:3, season:6},
     {id:'fa-s6-3b', name:'동부 시 협회 3과 파우스트',        grade:3, season:6},
     {id:'fa-s7-3a', name:'검지 수행자:【쪽지】 파우스트',    grade:3, season:7},
-    {id:'fa-s7-3b', name:'거미집 약시 제자 파우스트',        grade:3, season:7},
+    {id:'fa-s7-3b', name:'거미집 약지 제자 파우스트',        grade:3, season:7},
     /* ★3 발푸밤 */
     {id:'fa-vp-3a', name:'로보토미 E.G.O::후회 파우스트',     grade:3, season:'vp'},
+    {id:'fa-vp-3b', name:'새벽 사무소 해결사 파우스트',                grade:3, season:'vp'},
     /* 에고 */
   ],
   'don':[
@@ -466,6 +469,8 @@ const IDENTITIES = {
     {id:'do-vp-3a', name:'로보토미 E.G.O::사랑과 증오의 이름으로 돈키호테', grade:3, season:'vp'},
     {id:'do-s6-3b', name:'흑수 - 미 돈키호테',                          grade:3, season:6},
     {id:'do-s7-3a', name:'검지 대행자 - 개화 E.G.O::대행 돈키호테',     grade:3, season:7},
+    {id:'do-s8-3a', name:'오트쿠튀르::르누아르 브랜드 매니저 돈키호테',       grade:3, season:8},
+    {id:'do-vp-3b', name:'쐐기 사무소 해결사 돈키호테',                grade:3, season:'vp'},
     /* 에고 */
   ],
   'ryoshu':[
@@ -486,6 +491,8 @@ const IDENTITIES = {
     {id:'ry-s6-3a', name:'흑수 - 묘 료슈',                  grade:3, season:6},
     {id:'ry-s7-3a', name:'N사 E.G.O::경멸, 경외 료슈',      grade:3, season:7},
     {id:'ry-s7-3b', name:'홍원 방랑무사 료슈',               grade:3, season:7},
+    {id:'ry-s7-3c', name:'거미집의 검 료슈',                      grade:3, season:7},
+    {id:'ry-s8-3a', name:'오트쿠튀르::르누아르 신발관 료슈',             grade:3, season:8},
     {id:'ry-vp-3b', name:'로보토미 E.G.O::잔향 · 외로움 료슈', grade:3, season:'vp'},
     /* 에고 */
   ],
@@ -507,6 +514,7 @@ const IDENTITIES = {
     {id:'me-s6-3a', name:'서부 섕크 협회 3과 뫼르소',        grade:3, season:6},
     {id:'me-s6-3b', name:'동부 엄지 카포 IIII 뫼르소',       grade:3, season:6},
     {id:'me-s7-3a', name:'라만차랜드 왕자 뫼르소',           grade:3, season:7},
+    {id:'me-s7-3b', name:'약지 야수파 스튜던트 뫼르소',                grade:3, season:7},
     {id:'me-vp-3a', name:'로보토미 E.G.O::호넷【변조】 뫼르소', grade:3, season:'vp'},
   ],
   'hong-lu':[
@@ -523,6 +531,7 @@ const IDENTITIES = {
     /* ★3 통상 */
     {id:'hl-s0-3a', name:'R사 제 4무리 순록팀 홍루',         grade:3, season:0},
     {id:'hl-s0-3b', name:'남부 디에치 협회 4과 홍루',        grade:3, season:0},
+    {id:'hl-s0-3c', name:'동부 섕크 협회 3과 홍루',                 grade:3, season:0},
     /* ★3 시즌 */
     {id:'hl-s1-3a', name:'콩콩이파 두목 홍루',               grade:3, season:1},
     {id:'hl-s2-3a', name:'K사 3등급 적출직 직원 홍루',       grade:3, season:2},
@@ -530,6 +539,8 @@ const IDENTITIES = {
     {id:'hl-s5-3a', name:'마침표 사무소 대표 홍루',          grade:3, season:5},
     {id:'hl-s6-3a', name:'홍원 군주 홍루',                   grade:3, season:6},
     {id:'hl-s7-3a', name:'거미집 약지 아비 홍루',            grade:3, season:7},
+    {id:'hl-s7-3b', name:'S사 추노꾼 홍루',                      grade:3, season:7},
+    {id:'hl-s8-3a', name:'오트쿠튀르::르누아르 3F 방송실 홍루',          grade:3, season:8},
      /* ★3 발푸밤 */  
     {id:'hl-vp-3a', name:'마침표 사무소 대표 홍루',          grade:3, season:'vp'},
   ],
@@ -552,6 +563,9 @@ const IDENTITIES = {
     {id:'hc-s6-3a', name:'흑운회 와카슈 히스클리프',          grade:3, season:6},
     {id:'hc-s7-3a', name:'W사 4등급 정리 요원 - CCA 히스클리프', grade:3, season:7},
     {id:'hc-s7-3b', name:'흑수 - 유 필두 히스클리프',         grade:3, season:7},
+    {id:'hc-s7-3c', name:'중지 작은 형님 히스클리프',                 grade:3, season:7},
+    {id:'hc-s7-3d', name:'거미집 엄지 제자 히스클리프',                grade:3, season:7},
+    {id:'hc-s8-3a', name:'오트쿠튀르::르루주 바느질의 왕 히스클리프',        grade:3, season:8},
     {id:'hc-s2-3b', name:'로보토미 E.G.O::여우비 히스클리프', grade:3, season:2},
     /* 에고 */
   ],
@@ -574,6 +588,8 @@ const IDENTITIES = {
     {id:'is-s7-3a', name:'가주 후보 이스마엘',                   grade:3, season:7},
     {id:'is-s7-3b', name:'정사무소 대표 이스마엘',               grade:3, season:7},
     {id:'is-s7-3c', name:'거미집 중지 제자 이스마엘',            grade:3, season:7},
+    {id:'is-s7-3d', name:'LCD 현장추리팀 이스마엘',                 grade:3, season:7},
+    {id:'is-s8-3a', name:'오트쿠튀르::르루주 부티크 이스마엘',            grade:3, season:8},
     /* 에고 */
   ],
   'rodion':[
@@ -594,6 +610,9 @@ const IDENTITIES = {
     {id:'ro-s6-3b', name:'흑수 - 사 로쟈',                  grade:3, season:6},
     {id:'ro-vp-3a', name:'로보토미 E.G.O::눈물로 벼려낸 검 로쟈', grade:3, season:'vp'},
     {id:'ro-s6-3c', name:'R사 제 4무리 순록팀 로쟈',         grade:3, season:6},
+    {id:'ro-s7-3a', name:'약지 야수파 도슨트 로쟈',                  grade:3, season:7},
+    {id:'ro-s7-3b', name:'거미집 엄지 아비 로쟈',                   grade:3, season:7},
+    {id:'ro-s8-3a', name:'오트쿠튀르::수선실 로쟈',                  grade:3, season:8},
     /* 에고 */
   ],
   'sinclair':[
@@ -610,11 +629,13 @@ const IDENTITIES = {
     {id:'si-s2-3a', name:'쥐어들 자 싱클레어',                   grade:3, season:2},
     {id:'si-s3-3a', name:'남부 섕크 협회 4과 부장 싱클레어',     grade:3, season:3},
     {id:'si-vp-3a', name:'새벽 사무소 해결사 싱클레어',          grade:3, season:'vp'},
+    {id:'si-vp-3b', name:'쐐기 사무소 해결사 싱클레어',                grade:3, season:'vp'},
     {id:'si-s5-3a', name:'북부 제뱌찌 협회 3과 싱클레어',        grade:3, season:5},
     {id:'si-s6-3a', name:'중지 작은 아우 싱클레어',              grade:3, season:6},
     {id:'si-s7-3a', name:'동부 엄지 솔다토 II 싱클레어',         grade:3, season:7},
     {id:'si-s7-3b', name:'흑수 - 유 싱클레어',                  grade:3, season:7},
     {id:'si-s7-3c', name:'거미집 소지 제자 싱클레어',            grade:3, season:7},
+    {id:'si-s8-3a', name:'오트쿠튀르::르루주 붉은 신 싱클레어',           grade:3, season:8},
     /* 에고 */
   ],
   'outis':[
@@ -635,6 +656,8 @@ const IDENTITIES = {
     {id:'ou-s6-3a', name:'흑수 - 묘 오티스',                  grade:3, season:6},
     {id:'ou-s7-3a', name:'T사 3등급 강력징수직 직원 오티스',   grade:3, season:7},
     {id:'ou-s7-3b', name:'LCA 우제트 선봉 3팀 팀장 오티스',    grade:3, season:7},
+    {id:'ou-s7-3c', name:'거미집 중지 아비 오티스',                  grade:3, season:7},
+    {id:'ou-vp-3b', name:'쐐기 사무소 대표 오티스',                  grade:3, season:'vp'},
     /* 에고 */
   ],
   'gregor':[
@@ -655,10 +678,13 @@ const IDENTITIES = {
     {id:'gr-s6-3a', name:'불주먹 사무소 생존자 그레고르',     grade:3, season:6},
     {id:'gr-s6-3b', name:'흑수 - 사 그레고르',               grade:3, season:6},
     {id:'gr-vp-3a', name:'밤의 송곳 카피타노 그레고르',       grade:3, season:'vp'},
+    {id:'gr-vp-3b', name:'새벽 사무소 대표 그레고르',                 grade:3, season:'vp'},
     {id:'gr-s7-3a', name:'로보토미 E.G.O::램프 그레고르',     grade:3, season:7},
      {id:'gr-s7-3b', name:'LCE E.G.O:: AEDD 그레고르',     grade:3, season:7},
   ],
 };
+
+const WEDGE_PAIR = ['do-vp-3b', 'si-vp-3b'];
 
 /* E.G.O 목록 — season: 0=통상, 1~7=시즌 패스, 'vp'=발푸르기스의 밤 한정, 'event'=이벤트 */
 const EGO_LIST = {
@@ -1034,7 +1060,10 @@ function sw(id) {
     document.querySelectorAll('.nav-btn')[i].classList.toggle('on',t===id);
   });
   if(id==='collection') renderCollection();
-  if(id==='target') renderTargetList();
+  if(id==='target') {
+    renderTargetList();
+    calcTargetSummary();
+  }
   if(id==='calc') renderCalcShardList();
 }
 
@@ -1080,6 +1109,51 @@ function shardCost(grade) {
   return grade>=3 ? 400 : grade===2 ? 150 : 0;
 }
 
+function getTargetShardPlan() {
+  const plan = {};
+  const includesWedgePair = WEDGE_PAIR.some(iid => targetSel.has(iid));
+  const selected = includesWedgePair ? new Set([...targetSel, ...WEDGE_PAIR]) : targetSel;
+
+  selected.forEach(iid => {
+    const entry = getIdentityById(iid);
+    if(!entry) return;
+    const {identity, prisoner} = entry;
+    const pid = prisoner.id;
+    if(!plan[pid]) plan[pid] = {prisoner, items:[], have:shards[pid] || 0, need:0};
+    plan[pid].items.push(identity);
+    if(!WEDGE_PAIR.includes(iid)) plan[pid].need += shardCost(identity.grade);
+  });
+
+  if(includesWedgePair) {
+    const don = plan.don;
+    const sinclair = plan.sinclair;
+    const pairCost = shardCost(3);
+    let donShare = pairCost / 2;
+    let fewestBoxes = Infinity;
+    let fewestMissingShards = Infinity;
+
+    // 상자와 부족 파편이 가장 적은 배분을 고르고, 동률이면 균등한 쪽을 우선한다.
+    for(let share = 1; share < pairCost; share++) {
+      const donShort = Math.max(0, don.need + share - don.have);
+      const sinclairShort = Math.max(0, sinclair.need + pairCost - share - sinclair.have);
+      const boxes = shardsToBoxes(donShort) + shardsToBoxes(sinclairShort);
+      const missingShards = donShort + sinclairShort;
+      const moreBalanced = Math.abs(share - pairCost / 2) < Math.abs(donShare - pairCost / 2);
+      const betterTie = missingShards < fewestMissingShards ||
+        (missingShards === fewestMissingShards && moreBalanced);
+      if(boxes < fewestBoxes || (boxes === fewestBoxes && betterTie)) {
+        donShare = share;
+        fewestBoxes = boxes;
+        fewestMissingShards = missingShards;
+      }
+    }
+    don.need += donShare;
+    sinclair.need += pairCost - donShare;
+  }
+
+  return plan;
+}
+
 /* 에고 여부 판별 */
 function isEgoId(iid) {
   for(const p of PRISONERS) {
@@ -1095,14 +1169,14 @@ function gradeLabel(id, isEgo) {
 }
 
 function toggleTargetSel(iid) {
-  if(targetSel.has(iid)) {
-    targetSel.delete(iid);
-  } else {
-    targetSel.add(iid);
-  }
+  const isPair = WEDGE_PAIR.includes(iid);
+  const selected = targetSel.has(iid);
+  const ids = isPair ? WEDGE_PAIR : [iid];
+  ids.forEach(id => selected ? targetSel.delete(id) : targetSel.add(id));
   saveTarget();
-  // 해당 카드만 즉시 다시 그리기
-  const card = document.querySelector(`[data-tid="${iid}"]`);
+  if(isPair) renderTargetList();
+  // 일반 항목은 해당 카드만 즉시 다시 그리기
+  const card = isPair ? null : document.querySelector(`[data-tid="${iid}"]`);
   if(card) {
     const r = getIdentityById(iid);
     if(r) {
@@ -1136,7 +1210,7 @@ function toggleTargetSel(iid) {
 function clearTargetSel() {
   targetSel.clear();
   saveTarget();
-  document.querySelectorAll('.t-sel').forEach(c=>c.classList.remove('t-sel'));
+  renderTargetList();
   calcTargetSummary();
 }
 
@@ -1152,24 +1226,14 @@ function calcTargetSummary() {
   }
   summaryEl.style.display = 'block';
 
-  // 수감자별로 그룹화
-  const byPrisoner = {};
-  targetSel.forEach(iid => {
-    const r = getIdentityById(iid);
-    if(!r) return;
-    const pid = r.prisoner.id;
-    if(!byPrisoner[pid]) byPrisoner[pid] = {prisoner:r.prisoner, items:[]};
-    byPrisoner[pid].items.push(r.identity);
-  });
+  const byPrisoner = getTargetShardPlan();
 
   let totalCost  = 0;
   let totalBoxes = 0;
   let totalRuns  = 0;
   const rows = [];
 
-  Object.values(byPrisoner).forEach(({prisoner, items}) => {
-    const have   = shards[prisoner.id] || 0;
-    const need   = items.reduce((s,id)=>s+shardCost(id.grade), 0);
+  Object.values(byPrisoner).forEach(({prisoner, items, have, need}) => {
     const short  = Math.max(0, need - have);
     const boxes  = shardsToBoxes(short);
     const runs   = getRunsNeeded(short);
@@ -1279,14 +1343,10 @@ function renderCalcShardList() {
   const el = document.getElementById('calc-shard-list');
   if(!el) return;
 
+  const plan = getTargetShardPlan();
   const rows = PRISONERS.map(p => {
     const have = shards[p.id] || 0;
-    // 이 수감자에 대해 목표 인격 탭에서 선택된 인격들
-    const selItems = [...targetSel]
-      .map(iid => getIdentityById(iid))
-      .filter(r => r && r.prisoner.id === p.id)
-      .map(r => r.identity);
-    const needTotal = selItems.reduce((s,id) => s + shardCost(id.grade), 0);
+    const {items:selItems = [], need:needTotal = 0} = plan[p.id] || {};
     const short = Math.max(0, needTotal - have);
 
     return {p, have, selItems, needTotal, short};
@@ -1348,15 +1408,7 @@ function renderCalcShardList() {
 }
 
 function calcAll() {
-  // 목표 인격 탭 선택 기준으로 수감자별 집계
-  const byPrisoner = {};
-  targetSel.forEach(iid => {
-    const r = getIdentityById(iid);
-    if(!r) return;
-    const pid = r.prisoner.id;
-    if(!byPrisoner[pid]) byPrisoner[pid] = {prisoner:r.prisoner, items:[], have: shards[pid]||0};
-    byPrisoner[pid].items.push(r.identity);
-  });
+  const byPrisoner = getTargetShardPlan();
 
   if(Object.keys(byPrisoner).length === 0) {
     document.getElementById('mirror-metrics').innerHTML =
@@ -1369,8 +1421,7 @@ function calcAll() {
   let totalBoxes = 0, totalRuns = 0;
   const rows = [];
 
-  Object.values(byPrisoner).forEach(({prisoner, items, have}) => {
-    const need  = items.reduce((s,id)=>s+shardCost(id.grade), 0);
+  Object.values(byPrisoner).forEach(({prisoner, items, have, need}) => {
     const short = Math.max(0, need - have);
     const boxes = shardsToBoxes(short);
     const runs  = getRunsNeeded(short);
@@ -1482,6 +1533,23 @@ function setFilter(f,btn) {
   renderCollection();
 }
 function toggleId(key) {
+  if(WEDGE_PAIR.includes(key)) {
+    const isOwned = owned.has(key);
+    WEDGE_PAIR.forEach(iid => {
+      if(isOwned) owned.delete(iid);
+      else {
+        owned.add(iid);
+        targetSel.delete(iid);
+      }
+    });
+    save();
+    saveTarget();
+    renderCollection();
+    renderTargetList();
+    calcTargetSummary();
+    return;
+  }
+
   owned.has(key)?owned.delete(key):owned.add(key);
   save();
   const card=document.querySelector(`[data-id="${key}"]`);
