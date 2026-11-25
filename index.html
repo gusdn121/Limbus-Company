@@ -363,6 +363,7 @@ main{max-width:960px;margin:0 auto;padding:2.5rem 2rem 5rem}
       <button class="filter-btn" onclick="setFilter('1',this)">★1</button>
       <button class="filter-btn" onclick="setFilter('ego',this)">에고</button>
       <button class="filter-btn" onclick="setFilter('vp',this)">발푸밤 한정</button>
+      <button class="filter-btn" onclick="setFilter('collab',this)">콜라보</button>
       <span class="filter-spacer"></span>
       <button class="reset-btn" onclick="confirmReset()">초기화</button>
     </div>
@@ -392,503 +393,396 @@ const PRISONERS = [
   {id:'gregor',     name:'그레고르',  color:'#6a9840'},
 ];
 
-/* 인격 목록 — 새 인격 추가 시 여기에 항목 추가 */
-/* season: 0=통상, 1~8=시즌, 'vp'=발푸르기스의 밤 한정, 'ego'=에고 */
+/* 수감자별 출시일 오름차순. season: 0=통상·기본, 1~8=시즌, null=별도 한정. */
 const IDENTITIES = {
   'yi-sang':[
-    /* ★1 */
-    {id:'ys-s1-1',  name:'LCB 수감자 이상',               grade:1, season:0},
-    /* ★2 통상 */
-    {id:'ys-s0-2a', name:'남부 세븐 협회 6과 이상',        grade:2, season:0},
-    /* ★2 시즌 */
-    {id:'ys-s2-2a', name:'어금니 사무소 해결사 이상',      grade:2, season:2},
-    {id:'ys-s3-2a', name:'피쿼드호 일등 항해사 이상',      grade:2, season:3},
-    {id:'ys-s3-2b', name:'남부 디에치 협회 4과 이상',      grade:2, season:3},
-    /* ★2 발푸밤 */
-    {id:'ys-vp-2a', name:'LCE E.G.O::초롱 이상',          grade:2, season:'vp'},
-    /* ★3  통상*/ 
-    {id:'ys-s0-3a', name:'검계 살수 이상',                 grade:3, season:0},
-    {id:'ys-s0-3b', name:'W사 3등급 정리 요원 이상',       grade:3, season:0},
-    {id:'ys-s0-3c', name:'약지 점묘파 스튜던트 이상',      grade:3, season:0},
-    {id:'ys-s0-3d', name:'남부 리우 협회 3과 이상',        grade:3, season:0},
-    /* ★3 시즌 */
-    {id:'ys-s2-3a', name:'개화 E.G.O::동백 이상',          grade:3, season:2},
-    {id:'ys-s6-3a', name:'N사 E.G.O::흉탄 이상',          grade:3, season:6},
-    {id:'ys-s6-3b', name:'흑수 - 오 필두 이상',            grade:3, season:6},
-    {id:'ys-s7-3a', name:'거미집 검지 아비 이상',           grade:3, season:7},
-    {id:'ys-s7-3b', name:'LCE E.G.O::차원찢개 이상',             grade:3, season:7},
-    /* ★3 발푸밤 */
-    {id:'ys-vp-3a', name:'로보토미 E.G.O::엄숙한 애도 이상', grade:3, season:'vp'},
+    {id:'ys-s1-1', name:'LCB 수감자 이상', grade:1, season:0, releaseDate:'2023-02-27', source:'base'},
+    {id:'ys-s0-2a', name:'남부 세븐 협회 6과 이상', grade:2, season:0, releaseDate:'2023-02-27'},
+    {id:'ys-s0-3a', name:'검계 살수 이상', grade:3, season:0, releaseDate:'2023-02-27'},
+    {id:'ys-s2-3a', name:'개화 E.G.O::동백 이상', grade:3, season:2, releaseDate:'2023-06-15'},
+    {id:'ys-s2-2a', name:'어금니 사무소 해결사 이상', grade:2, season:2, releaseDate:'2023-09-14', source:'event-reward'},
+    {id:'ys-s0-3b', name:'W사 3등급 정리 요원 이상', grade:3, season:0, releaseDate:'2023-11-09'},
+    {id:'ys-s3-2a', name:'피쿼드호 일등 항해사 이상', grade:2, season:3, releaseDate:'2023-12-07'},
+    {id:'ys-s3-2b', name:'남부 디에치 협회 4과 이상', grade:2, season:0, releaseDate:'2024-01-25'},
+    {id:'ys-s0-3c', name:'약지 점묘파 스튜던트 이상', grade:3, season:0, releaseDate:'2024-05-16'},
+    {id:'ys-vp-3a', name:'로보토미 E.G.O::엄숙한 애도 이상', grade:3, season:null, releaseDate:'2024-09-05', source:'vp'},
+    {id:'ys-vp-2a', name:'LCE E.G.O::초롱 이상', grade:2, season:5, releaseDate:'2025-01-23', source:'event-reward'},
+    {id:'ys-s0-3d', name:'남부 리우 협회 3과 이상', grade:3, season:0, releaseDate:'2025-02-20'},
+    {id:'ys-s6-3a', name:'N사 E.G.O::흉탄 이상', grade:3, season:6, releaseDate:'2025-07-03'},
+    {id:'ys-s6-3b', name:'흑수 - 오 필두 이상', grade:3, season:6, releaseDate:'2025-08-28', source:'event'},
+    {id:'ys-s7-3a', name:'거미집 검지 아비 이상', grade:3, season:7, releaseDate:'2026-02-19'},
+    {id:'ys-s7-3b', name:'LCE E.G.O::차원찢개 이상', grade:3, season:7, releaseDate:'2026-07-23'},
   ],
   'faust':[
-    /* ★1 */
-    {id:'fa-s1-1',  name:'LCB 수감자 파우스트',               grade:1, season:0},
-    /* ★2 통상 */
-    {id:'fa-s0-2a', name:'W사 2등급 정리 요원 파우스트',      grade:2, season:0},
-    {id:'fa-s0-2b', name:'살아남은 로보토미 직원 파우스트',   grade:2, season:0},
-    {id:'fa-s0-2c', name:'남부 츠바이 협회 4과 파우스트',     grade:2, season:0},
-    /* ★2 시즌 */
-   
-    {id:'fa-s4-2a', name:'워더링하이츠 버틀러 파우스트',      grade:2, season:4},
-    /* ★3 통상 */
-    {id:'fa-s0-3a', name:'남부 세븐 협회 4과 파우스트',       grade:3, season:0},
-    
-    /* ★3 시즌 */
-    {id:'fa-s1-3a', name:'쥐는 자 파우스트',                  grade:3, season:1},
-    {id:'fa-s3-3a', name:'남부 세븐 협회 4과 파우스트',       grade:3, season:0},
-    {id:'fa-s3-3b', name:'검계 살수 파우스트',                grade:3, season:3},
-    {id:'fa-s4-3a', name:'멀티크랙 사무소 대표 파우스트',     grade:3, season:4},
-    {id:'fa-s5-3b', name:'LCE E.G.O::홍염살 파우스트',       grade:3, season:5},
-    {id:'fa-s6-3a', name:'흑수 - 묘 필두 파우스트',          grade:3, season:6},
-    {id:'fa-s6-3b', name:'동부 시 협회 3과 파우스트',        grade:3, season:6},
-    {id:'fa-s7-3a', name:'검지 수행자:【쪽지】 파우스트',    grade:3, season:7},
-    {id:'fa-s7-3b', name:'거미집 약지 제자 파우스트',        grade:3, season:7},
-    /* ★3 발푸밤 */
-    {id:'fa-vp-3a', name:'로보토미 E.G.O::후회 파우스트',     grade:3, season:'vp'},
-    {id:'fa-vp-3b', name:'새벽 사무소 해결사 파우스트',                grade:3, season:'vp'},
-    /* 에고 */
+    {id:'fa-s1-1', name:'LCB 수감자 파우스트', grade:1, season:0, releaseDate:'2023-02-27', source:'base'},
+    {id:'fa-s0-2a', name:'W사 2등급 정리 요원 파우스트', grade:2, season:0, releaseDate:'2023-02-27'},
+    {id:'fa-s0-2b', name:'살아남은 로보토미 직원 파우스트', grade:2, season:1, releaseDate:'2023-02-27'},
+    {id:'fa-s1-3a', name:'쥐는 자 파우스트', grade:3, season:1, releaseDate:'2023-03-23'},
+    {id:'fa-s0-2c', name:'남부 츠바이 협회 4과 파우스트', grade:2, season:0, releaseDate:'2023-08-10'},
+    {id:'fa-s0-3a', name:'남부 세븐 협회 4과 파우스트', grade:3, season:0, releaseDate:'2023-09-07'},
+    {id:'fa-vp-3a', name:'로보토미 E.G.O::후회 파우스트', grade:3, season:null, releaseDate:'2023-10-26', source:'vp'},
+    {id:'fa-s3-3b', name:'검계 살수 파우스트', grade:3, season:3, releaseDate:'2024-02-22', source:'event'},
+    {id:'fa-s4-2a', name:'워더링하이츠 버틀러 파우스트', grade:2, season:4, releaseDate:'2024-04-04'},
+    {id:'fa-s4-3a', name:'멀티크랙 사무소 대표 파우스트', grade:3, season:4, releaseDate:'2024-08-08', source:'event'},
+    {id:'fa-s5-3b', name:'LCE E.G.O::홍염살 파우스트', grade:3, season:5, releaseDate:'2025-01-23', source:'event'},
+    {id:'fa-s6-3a', name:'흑수 - 묘 필두 파우스트', grade:3, season:6, releaseDate:'2025-05-22'},
+    {id:'fa-s6-3b', name:'동부 시 협회 3과 파우스트', grade:3, season:0, releaseDate:'2025-10-09'},
+    {id:'fa-s7-3a', name:'검지 수행자: 【쪽지】 파우스트', grade:3, season:7, releaseDate:'2025-12-31'},
+    {id:'fa-s7-3b', name:'거미집 약지 제자 파우스트', grade:3, season:7, releaseDate:'2026-04-02'},
+    {id:'fa-vp-3b', name:'새벽 사무소 해결사 파우스트', grade:3, season:null, releaseDate:'2026-07-09', source:'vp'},
   ],
   'don':[
-    /* ★1 */
-    {id:'do-s1-1',  name:'LCB 수감자 돈키호테',                          grade:1, season:0},
-    /* ★2 통상 */
-    {id:'do-s0-2a', name:'남부 시 협회 5과 부장 돈키호테',               grade:2, season:0},
-    /* ★2 시즌 */
-    {id:'do-s1-2a', name:'N사 중간 망치 돈키호테',                       grade:2, season:1},
-    /* ★2 발푸밤 */
-    {id:'do-vp-2a', name:'로보토미 E.G.O::초롱 돈키호테',                grade:2, season:'vp'},
-    /* ★2 시즌 (계속) */
-    {id:'do-s3-2a', name:'검계 살수 돈키호테',                           grade:2, season:3},
-    /* ★3 시즌 */
-    {id:'do-s1-3a', name:'W사 3등급 정리 요원 돈키호테',                 grade:3, season:1},
-    {id:'do-s2-3a', name:'남부 섕크 협회 5과 부장 돈키호테',             grade:3, season:2},
-    {id:'do-s3-3a', name:'중지 작은 아우 돈키호테',                      grade:3, season:3},
-    {id:'do-s4-3a', name:'T사 3등급 징수직 직원 돈키호테',               grade:3, season:4},
-    {id:'do-s5-3a', name:'라만차랜드 실장 돈키호테',                     grade:3, season:5},
-    {id:'do-s6-3a', name:'동부 섕크 협회 3과 돈키호테',                  grade:3, season:6},
-    {id:'do-vp-3a', name:'로보토미 E.G.O::사랑과 증오의 이름으로 돈키호테', grade:3, season:'vp'},
-    {id:'do-s6-3b', name:'흑수 - 미 돈키호테',                          grade:3, season:6},
-    {id:'do-s7-3a', name:'검지 대행자 - 개화 E.G.O::대행 돈키호테',     grade:3, season:7},
-    {id:'do-s8-3a', name:'오트쿠튀르::르누아르 브랜드 매니저 돈키호테',       grade:3, season:8},
-    {id:'do-vp-3b', name:'쐐기 사무소 해결사 돈키호테',                grade:3, season:'vp'},
-    /* 에고 */
+    {id:'do-s1-1', name:'LCB 수감자 돈키호테', grade:1, season:0, releaseDate:'2023-02-27', source:'base'},
+    {id:'do-s1-3a', name:'W사 3등급 정리 요원 돈키호테', grade:3, season:0, releaseDate:'2023-02-27'},
+    {id:'do-s0-2a', name:'남부 시 협회 5과 부장 돈키호테', grade:2, season:0, releaseDate:'2023-02-27'},
+    {id:'do-s1-2a', name:'N사 중간 망치 돈키호테', grade:2, season:1, releaseDate:'2023-05-04'},
+    {id:'do-s2-3a', name:'남부 섕크 협회 5과 부장 돈키호테', grade:3, season:0, releaseDate:'2023-07-20'},
+    {id:'do-s3-3a', name:'중지 작은 아우 돈키호테', grade:3, season:3, releaseDate:'2023-11-23'},
+    {id:'do-vp-2a', name:'로보토미 E.G.O::초롱 돈키호테', grade:2, season:null, releaseDate:'2024-01-11', source:'vp'},
+    {id:'do-s3-2a', name:'검계 살수 돈키호테', grade:2, season:3, releaseDate:'2024-02-22', source:'event-reward'},
+    {id:'do-s4-3a', name:'T사 3등급 징수직 직원 돈키호테', grade:3, season:0, releaseDate:'2024-06-27'},
+    {id:'do-s5-3a', name:'라만차랜드 실장 돈키호테', grade:3, season:5, releaseDate:'2024-12-12'},
+    {id:'do-s6-3a', name:'동부 섕크 협회 3과 돈키호테', grade:3, season:0, releaseDate:'2025-03-06'},
+    {id:'do-vp-3a', name:'로보토미 E.G.O::사랑과 증오의 이름으로 돈키호테', grade:3, season:null, releaseDate:'2025-07-17', source:'vp'},
+    {id:'do-s6-3b', name:'흑수 - 미 돈키호테', grade:3, season:6, releaseDate:'2025-11-20'},
+    {id:'do-s7-3a', name:'검지 대행자 - 개화 E.G.O::대행 돈키호테', grade:3, season:7, releaseDate:'2026-01-08'},
+    {id:'do-s8-3a', name:'오트쿠튀르::르누아르 브랜드 매니저 돈키호테', grade:3, season:8, releaseDate:'2026-10-01'},
+    {id:'do-vp-3b', name:'쐐기 사무소 해결사 돈키호테', grade:3, season:null, releaseDate:'2026-11-12', source:'vp'},
   ],
   'ryoshu':[
-    /* ★1 */
-    {id:'ry-s1-1',  name:'LCB 수감자 료슈',                  grade:1, season:0},
-    /* ★2 통상 */
-    {id:'ry-s0-2a', name:'남부 세븐 협회 6과 료슈',          grade:2, season:0},
-    /* ★2 시즌 */
-    {id:'ry-s1-2a', name:'LCCB 대리 료슈',                   grade:2, season:1},
-    {id:'ry-s3-2a', name:'남부 리우 협회 4과 료슈',          grade:2, season:3},
-    {id:'ry-s5-2a', name:'20구 유로지비 료슈',               grade:2, season:5},
-    /* ★3 시즌 */
-    {id:'ry-s1-3a', name:'흑운회 와카슈 료슈',               grade:3, season:1},
-    {id:'ry-s2-3a', name:'료.고.파. 주방장 료슈',            grade:3, season:2},
-    {id:'ry-s3-3a', name:'W사 3등급 정리 요원 료슈',         grade:3, season:3},
-    {id:'ry-s4-3a', name:'에드가 가문 치프 버틀러 료슈',     grade:3, season:4},
-    {id:'ry-vp-3a', name:'로보토미 E.G.O::적안 · 참회 료슈', grade:3, season:'vp'},
-    {id:'ry-s6-3a', name:'흑수 - 묘 료슈',                  grade:3, season:6},
-    {id:'ry-s7-3a', name:'N사 E.G.O::경멸, 경외 료슈',      grade:3, season:7},
-    {id:'ry-s7-3b', name:'홍원 방랑무사 료슈',               grade:3, season:7},
-    {id:'ry-s7-3c', name:'거미집의 검 료슈',                      grade:3, season:7},
-    {id:'ry-s8-3a', name:'오트쿠튀르::르누아르 신발관 료슈',             grade:3, season:8},
-    {id:'ry-vp-3b', name:'로보토미 E.G.O::잔향 · 외로움 료슈', grade:3, season:'vp'},
-    /* 에고 */
+    {id:'ry-s1-1', name:'LCB 수감자 료슈', grade:1, season:0, releaseDate:'2023-02-27', source:'base'},
+    {id:'ry-s0-2a', name:'남부 세븐 협회 6과 료슈', grade:2, season:0, releaseDate:'2023-02-27'},
+    {id:'ry-s1-3a', name:'흑운회 와카슈 료슈', grade:3, season:0, releaseDate:'2023-02-27'},
+    {id:'ry-s2-3a', name:'료. 고. 파. 주방장 료슈', grade:3, season:1, releaseDate:'2023-04-20', source:'event'},
+    {id:'ry-s3-3a', name:'W사 3등급 정리 요원 료슈', grade:3, season:0, releaseDate:'2023-08-24'},
+    {id:'ry-s1-2a', name:'LCCB 대리 료슈', grade:2, season:3, releaseDate:'2023-11-16'},
+    {id:'ry-s3-2a', name:'남부 리우 협회 4과 료슈', grade:2, season:0, releaseDate:'2024-03-07'},
+    {id:'ry-s4-3a', name:'에드가 가문 치프 버틀러 료슈', grade:3, season:4, releaseDate:'2024-04-18'},
+    {id:'ry-s5-2a', name:'20구 유로지비 료슈', grade:2, season:4, releaseDate:'2024-06-13', source:'event-reward'},
+    {id:'ry-vp-3a', name:'로보토미 E.G.O::적안・참회 료슈', grade:3, season:null, releaseDate:'2024-09-05', source:'vp'},
+    {id:'ry-s6-3a', name:'흑수 - 묘 료슈', grade:3, season:5, releaseDate:'2025-03-20', source:'event'},
+    {id:'ry-s7-3a', name:'N사 E.G.O::경멸, 경외 료슈', grade:3, season:6, releaseDate:'2025-09-11'},
+    {id:'ry-s7-3b', name:'홍원 방랑무사 료슈', grade:3, season:6, releaseDate:'2025-12-04'},
+    {id:'ry-vp-3b', name:'로보토미 E.G.O::잔향・외로움 료슈', grade:3, season:null, releaseDate:'2026-03-05', source:'vp'},
+    {id:'ry-s7-3c', name:'거미집의 검 료슈', grade:3, season:7, releaseDate:'2026-05-14'},
+    {id:'ry-s8-3a', name:'오트쿠튀르::르누아르 신발관 료슈', grade:3, season:8, releaseDate:'2026-09-17'},
   ],
   'meursault':[
-    /* ★1 */
-    {id:'me-s1-1',  name:'LCB 수감자 뫼르소',                grade:1, season:0},
-    /* ★2 통상 */
-    {id:'me-s0-2a', name:'남부 리우 협회 6과 뫼르소',        grade:2, season:0},
-    /* ★2 시즌 */
-    {id:'me-s1-2a', name:'장미스패너 공방 해결사 뫼르소',    grade:2, season:1},
-    {id:'me-s3-2a', name:'중지 작은 아우 뫼르소',            grade:2, season:3},
-    {id:'me-s5-2a', name:'데드레빗츠 보스 뫼르소',           grade:2, season:5},
-    /* ★3 시즌 */
-    {id:'me-s1-3a', name:'W사 2등급 정리 요원 뫼르소',       grade:3, season:1},
-    {id:'me-s2-3a', name:'N사 큰 망치 뫼르소',               grade:3, season:2},
-    {id:'me-s3-3a', name:'R사 제 4무리 코뿔소팀 뫼르소',     grade:3, season:3},
-    {id:'me-s4-3a', name:'검계 우두머리 뫼르소',             grade:3, season:4},
-    {id:'me-s5-3a', name:'남부 디에치 협회 4과 부장 뫼르소', grade:3, season:5},
-    {id:'me-s6-3a', name:'서부 섕크 협회 3과 뫼르소',        grade:3, season:6},
-    {id:'me-s6-3b', name:'동부 엄지 카포 IIII 뫼르소',       grade:3, season:6},
-    {id:'me-s7-3a', name:'라만차랜드 왕자 뫼르소',           grade:3, season:7},
-    {id:'me-s7-3b', name:'약지 야수파 스튜던트 뫼르소',                grade:3, season:7},
-    {id:'me-vp-3a', name:'로보토미 E.G.O::호넷【변조】 뫼르소', grade:3, season:'vp'},
+    {id:'me-s1-1', name:'LCB 수감자 뫼르소', grade:1, season:0, releaseDate:'2023-02-27', source:'base'},
+    {id:'me-s0-2a', name:'남부 리우 협회 6과 뫼르소', grade:2, season:0, releaseDate:'2023-02-27'},
+    {id:'me-s1-3a', name:'W사 2등급 정리 요원 뫼르소', grade:3, season:0, releaseDate:'2023-02-27'},
+    {id:'me-s2-3a', name:'N사 큰 망치 뫼르소', grade:3, season:1, releaseDate:'2023-03-09'},
+    {id:'me-s1-2a', name:'장미스패너 공방 해결사 뫼르소', grade:2, season:2, releaseDate:'2023-06-01'},
+    {id:'me-s3-3a', name:'R사 제 4무리 코뿔소팀 뫼르소', grade:3, season:0, releaseDate:'2023-07-13'},
+    {id:'me-s3-2a', name:'중지 작은 아우 뫼르소', grade:2, season:3, releaseDate:'2023-11-23'},
+    {id:'me-s4-3a', name:'검계 우두머리 뫼르소', grade:3, season:3, releaseDate:'2024-02-22', source:'event'},
+    {id:'me-s5-2a', name:'데드레빗츠 보스 뫼르소', grade:2, season:4, releaseDate:'2024-03-28'},
+    {id:'me-s5-3a', name:'남부 디에치 협회 4과 부장 뫼르소', grade:3, season:0, releaseDate:'2024-07-11'},
+    {id:'me-s6-3a', name:'서부 섕크 협회 3과 뫼르소', grade:3, season:5, releaseDate:'2024-10-10'},
+    {id:'me-s6-3b', name:'동부 엄지 카포IIII 뫼르소', grade:3, season:6, releaseDate:'2025-06-19'},
+    {id:'me-s7-3a', name:'라만차랜드 왕자 뫼르소', grade:3, season:6, releaseDate:'2025-10-23', source:'event'},
+    {id:'me-vp-3a', name:'로보토미 E.G.O::호넷【변조】 뫼르소', grade:3, season:null, releaseDate:'2026-03-05', source:'vp'},
+    {id:'me-s7-3b', name:'약지 야수파 스튜던트 뫼르소', grade:3, season:7, releaseDate:'2026-04-16', source:'event-reward'},
   ],
   'hong-lu':[
-    /* ★1 */
-    {id:'hl-s1-1',  name:'LCB 수감자 홍루',                  grade:1, season:0},
-    /* ★2 통상 */
-    {id:'hl-s0-2a', name:'흑운회 와카슈 홍루',               grade:2, season:0},
-     /* ★2 발푸밤 */ 
-    {id:'hl-vp-2a', name:'갈고리 사무소 해결사 홍루',        grade:2, season:'vp'},
-    /* ★2 시즌 */
-    {id:'hl-s1-2a', name:'남부 리우 협회 5과 홍루',          grade:2, season:1},
-    {id:'hl-s2-2a', name:'W사 2등급 정리 요원 홍루',         grade:2, season:2},
-    {id:'hl-s5-2a', name:'송곳니 사냥 사무소 해결사 홍루',   grade:2, season:5},
-    /* ★3 통상 */
-    {id:'hl-s0-3a', name:'R사 제 4무리 순록팀 홍루',         grade:3, season:0},
-    {id:'hl-s0-3b', name:'남부 디에치 협회 4과 홍루',        grade:3, season:0},
-    {id:'hl-s0-3c', name:'동부 섕크 협회 3과 홍루',                 grade:3, season:0},
-    /* ★3 시즌 */
-    {id:'hl-s1-3a', name:'콩콩이파 두목 홍루',               grade:3, season:1},
-    {id:'hl-s2-3a', name:'K사 3등급 적출직 직원 홍루',       grade:3, season:2},
-    {id:'hl-s4-3a', name:'20구 유로지비 홍루',               grade:3, season:4},
-    {id:'hl-s5-3a', name:'마침표 사무소 대표 홍루',          grade:3, season:5},
-    {id:'hl-s6-3a', name:'홍원 군주 홍루',                   grade:3, season:6},
-    {id:'hl-s7-3a', name:'거미집 약지 아비 홍루',            grade:3, season:7},
-    {id:'hl-s7-3b', name:'S사 추노꾼 홍루',                      grade:3, season:7},
-    {id:'hl-s8-3a', name:'오트쿠튀르::르누아르 3F 방송실 홍루',          grade:3, season:8},
-     /* ★3 발푸밤 */  
-    {id:'hl-vp-3a', name:'마침표 사무소 대표 홍루',          grade:3, season:'vp'},
+    {id:'hl-s1-1', name:'LCB 수감자 홍루', grade:1, season:0, releaseDate:'2023-02-27', source:'base'},
+    {id:'hl-s0-2a', name:'흑운회 와카슈 홍루', grade:2, season:0, releaseDate:'2023-02-27'},
+    {id:'hl-s1-3a', name:'콩콩이파 두목 홍루', grade:3, season:1, releaseDate:'2023-02-27'},
+    {id:'hl-s1-2a', name:'남부 리우 협회 5과 홍루', grade:2, season:0, releaseDate:'2023-04-06'},
+    {id:'hl-s2-3a', name:'K사 3등급 적출직 직원 홍루', grade:3, season:2, releaseDate:'2023-06-29'},
+    {id:'hl-s2-2a', name:'W사 2등급 정리 요원 홍루', grade:2, season:0, releaseDate:'2023-08-24'},
+    {id:'hl-vp-2a', name:'갈고리 사무소 해결사 홍루', grade:2, season:null, releaseDate:'2023-10-26', source:'vp'},
+    {id:'hl-s0-3b', name:'남부 디에치 협회 4과 홍루', grade:3, season:0, releaseDate:'2024-01-25'},
+    {id:'hl-s4-3a', name:'20구 유로지비 홍루', grade:3, season:4, releaseDate:'2024-06-13', source:'event'},
+    {id:'hl-s5-2a', name:'송곳니 사냥 사무소 해결사 홍루', grade:2, season:5, releaseDate:'2024-10-17'},
+    {id:'hl-vp-3a', name:'마침표 사무소 대표 홍루', grade:3, season:null, releaseDate:'2025-01-09', source:'vp'},
+    {id:'hl-s0-3a', name:'R사 제 4무리 순록팀 홍루', grade:3, season:0, releaseDate:'2025-04-30'},
+    {id:'hl-s6-3a', name:'홍원 군주 홍루', grade:3, season:6, releaseDate:'2025-08-14'},
+    {id:'hl-s7-3a', name:'거미집 약지 아비 홍루', grade:3, season:7, releaseDate:'2026-04-02'},
+    {id:'hl-s7-3b', name:'S사 추노꾼 홍루', grade:3, season:7, releaseDate:'2026-06-11', source:'event-reward'},
+    {id:'hl-s0-3c', name:'동부 섕크 협회 3과 홍루', grade:3, season:0, releaseDate:'2026-08-20'},
+    {id:'hl-s8-3a', name:'오트쿠튀르::르누아르 3F 방송실 홍루', grade:3, season:8, releaseDate:'2026-10-29'},
   ],
   'heathcliff':[
-    /* ★1 */
-    {id:'hc-s1-1',  name:'LCB 수감자 히스클리프',             grade:1, season:0},
-    /* ★2 통상 */
-    {id:'hc-s0-2a', name:'남부 시 협회 5과 히스클리프',       grade:2, season:0},
-    /* ★2 시즌 */
-    {id:'hc-s1-2a', name:'N사 작은 망치 히스클리프',          grade:2, season:1},
-    {id:'hc-s1-2b', name:'남부 세븐 협회 4과 히스클리프',     grade:2, season:1},
-    {id:'hc-s2-2a', name:'멀티크랙 사무소 해결사 히스클리프', grade:2, season:2},
-    /* ★3 통상 */
-    {id:'hc-s0-3a', name:'R사 제 4무리 토끼팀 히스클리프',    grade:3, season:0},
-    /* ★3 시즌 */
-    {id:'hc-s2-3a', name:'피쿼드호 작살잡이 히스클리프',      grade:3, season:2},
-    {id:'hc-s3-3a', name:'남부 외우피 협회 3과 히스클리프',   grade:3, season:3},
-    {id:'hc-s4-3a', name:'와일드헌트 히스클리프',             grade:3, season:4},
-    {id:'hc-s5-3a', name:'마침표 사무소 해결사 히스클리프',   grade:3, season:5},
-    {id:'hc-s6-3a', name:'흑운회 와카슈 히스클리프',          grade:3, season:6},
-    {id:'hc-s7-3a', name:'W사 4등급 정리 요원 - CCA 히스클리프', grade:3, season:7},
-    {id:'hc-s7-3b', name:'흑수 - 유 필두 히스클리프',         grade:3, season:7},
-    {id:'hc-s7-3c', name:'중지 작은 형님 히스클리프',                 grade:3, season:7},
-    {id:'hc-s7-3d', name:'거미집 엄지 제자 히스클리프',                grade:3, season:7},
-    {id:'hc-s8-3a', name:'오트쿠튀르::르루주 바느질의 왕 히스클리프',        grade:3, season:8},
-    {id:'hc-s2-3b', name:'로보토미 E.G.O::여우비 히스클리프', grade:3, season:2},
-    /* 에고 */
+    {id:'hc-s1-1', name:'LCB 수감자 히스클리프', grade:1, season:0, releaseDate:'2023-02-27', source:'base'},
+    {id:'hc-s0-2a', name:'남부 시 협회 5과 히스클리프', grade:2, season:0, releaseDate:'2023-02-27'},
+    {id:'hc-s0-3a', name:'R사 제 4무리 토끼팀 히스클리프', grade:3, season:0, releaseDate:'2023-02-27'},
+    {id:'hc-s1-2a', name:'N사 작은 망치 히스클리프', grade:2, season:1, releaseDate:'2023-03-23'},
+    {id:'hc-s2-3b', name:'로보토미 E.G.O::여우비 히스클리프', grade:3, season:2, releaseDate:'2023-06-08'},
+    {id:'hc-s1-2b', name:'남부 세븐 협회 4과 히스클리프', grade:2, season:0, releaseDate:'2023-09-07'},
+    {id:'hc-s2-3a', name:'피쿼드호 작살잡이 히스클리프', grade:3, season:3, releaseDate:'2023-12-07'},
+    {id:'hc-s3-3a', name:'남부 외우피 협회 3과 히스클리프', grade:3, season:0, releaseDate:'2024-03-21'},
+    {id:'hc-s2-2a', name:'멀티크랙 사무소 해결사 히스클리프', grade:2, season:4, releaseDate:'2024-08-08', source:'event-reward'},
+    {id:'hc-s4-3a', name:'와일드헌트 히스클리프', grade:3, season:4, releaseDate:'2024-08-22'},
+    {id:'hc-s5-3a', name:'마침표 사무소 해결사 히스클리프', grade:3, season:null, releaseDate:'2025-01-09', source:'vp'},
+    {id:'hc-s6-3a', name:'흑운회 와카슈 히스클리프', grade:3, season:5, releaseDate:'2025-02-06', source:'event-reward'},
+    {id:'hc-s7-3a', name:'W사 4등급 정리 요원 - CCA 히스클리프', grade:3, season:6, releaseDate:'2025-10-23', source:'event'},
+    {id:'hc-s7-3b', name:'흑수 - 유 필두 히스클리프', grade:3, season:6, releaseDate:'2025-11-20'},
+    {id:'hc-s7-3c', name:'중지 작은 형님 히스클리프', grade:3, season:7, releaseDate:'2026-04-30', source:'event'},
+    {id:'hc-s7-3d', name:'거미집 엄지 제자 히스클리프', grade:3, season:7, releaseDate:'2026-06-25'},
+    {id:'hc-s8-3a', name:'오트쿠튀르::르루주 바느질의 왕 히스클리프', grade:3, season:8, releaseDate:'2026-10-29'},
   ],
   'ishmael':[
-    /* ★1 */
-    {id:'is-s1-1',  name:'LCB 수감자 이스마엘',                  grade:1, season:0},
-    /* ★2 통상 */
-    {id:'is-s0-2a', name:'남부 시 협회 5과 이스마엘',            grade:2, season:0},
-    /* ★2 시즌 */
-    {id:'is-s1-2a', name:'LCCB 대리 이스마엘',                   grade:2, season:1},
-    {id:'is-s2-2a', name:'로보토미 E.G.O::출렁임 이스마엘',      grade:2, season:2},
-    {id:'is-s3-2a', name:'에드가 가문 버틀러 이스마엘',          grade:2, season:3},
-    /* ★3 시즌 */
-    {id:'is-s1-3a', name:'R사 제 4무리 순록팀 이스마엘',         grade:3, season:1},
-    {id:'is-s2-3a', name:'남부 리우 협회 4과 이스마엘',          grade:3, season:2},
-    {id:'is-s3-3a', name:'어금니 보트 센터 해결사 이스마엘',     grade:3, season:3},
-    {id:'is-s4-3a', name:'피쿼드호 선장 이스마엘',               grade:3, season:4},
-    {id:'is-s5-3a', name:'서부 츠바이 협회 3과 이스마엘',        grade:3, season:5},
-    {id:'is-s6-3a', name:'흑운회 부조장 이스마엘',               grade:3, season:6},
-    {id:'is-s7-3a', name:'가주 후보 이스마엘',                   grade:3, season:7},
-    {id:'is-s7-3b', name:'정사무소 대표 이스마엘',               grade:3, season:7},
-    {id:'is-s7-3c', name:'거미집 중지 제자 이스마엘',            grade:3, season:7},
-    {id:'is-s7-3d', name:'LCD 현장추리팀 이스마엘',                 grade:3, season:7},
-    {id:'is-s8-3a', name:'오트쿠튀르::르루주 부티크 이스마엘',            grade:3, season:8},
-    /* 에고 */
+    {id:'is-s1-1', name:'LCB 수감자 이스마엘', grade:1, season:0, releaseDate:'2023-02-27', source:'base'},
+    {id:'is-s1-3a', name:'R사 제 4무리 순록팀 이스마엘', grade:3, season:0, releaseDate:'2023-02-27'},
+    {id:'is-s0-2a', name:'남부 시 협회 5과 이스마엘', grade:2, season:0, releaseDate:'2023-02-27'},
+    {id:'is-s1-2a', name:'LCCB 대리 이스마엘', grade:2, season:1, releaseDate:'2023-02-27'},
+    {id:'is-s2-2a', name:'로보토미 E.G.O::출렁임 이스마엘', grade:2, season:2, releaseDate:'2023-06-15'},
+    {id:'is-s2-3a', name:'남부 리우 협회 4과 이스마엘', grade:3, season:0, releaseDate:'2023-07-06'},
+    {id:'is-s3-3a', name:'어금니 보트 센터 해결사 이스마엘', grade:3, season:2, releaseDate:'2023-07-27', source:'event'},
+    {id:'is-s4-3a', name:'피쿼드호 선장 이스마엘', grade:3, season:3, releaseDate:'2024-02-08'},
+    {id:'is-s3-2a', name:'에드가 가문 버틀러 이스마엘', grade:2, season:4, releaseDate:'2024-04-18'},
+    {id:'is-s5-3a', name:'서부 츠바이 협회 3과 이스마엘', grade:3, season:0, releaseDate:'2024-10-03'},
+    {id:'is-s6-3a', name:'흑운회 부조장 이스마엘', grade:3, season:5, releaseDate:'2025-02-06', source:'event'},
+    {id:'is-s7-3a', name:'가주 후보 이스마엘', grade:3, season:6, releaseDate:'2025-06-05'},
+    {id:'is-s7-3b', name:'정사무소 대표 이스마엘', grade:3, season:null, releaseDate:'2025-11-06', source:'vp'},
+    {id:'is-s7-3c', name:'거미집 중지 제자 이스마엘', grade:3, season:7, releaseDate:'2026-01-22'},
+    {id:'is-s7-3d', name:'LCD 현장추리팀 이스마엘', grade:3, season:7, releaseDate:'2026-06-11', source:'event'},
+    {id:'is-s8-3a', name:'오트쿠튀르::르루주 부티크 이스마엘', grade:3, season:8, releaseDate:'2026-09-17'},
   ],
   'rodion':[
-    /* ★1 */
-    {id:'ro-s1-1',  name:'LCB 수감자 로쟈',                  grade:1, season:0},
-    /* ★2 시즌 */
-    {id:'ro-s1-2a', name:'LCCB 대리 로쟈',                   grade:2, season:1},
-    {id:'ro-s2-2a', name:'N사 중간 망치 로쟈',               grade:2, season:2},
-    {id:'ro-s3-2a', name:'남부 츠바이 협회 5과 로쟈',        grade:2, season:3},
-    {id:'ro-s4-2a', name:'T사 2등급 징수직 직원 로쟈',       grade:2, season:4},
-    /* ★3 시즌 */
-    {id:'ro-s1-3a', name:'흑운회 와카슈 로쟈',               grade:3, season:1},
-    {id:'ro-s2-3a', name:'장미스패너 공방 대표 로쟈',        grade:3, season:2},
-    {id:'ro-s3-3a', name:'남부 디에치 협회 4과 로쟈',        grade:3, season:3},
-    {id:'ro-s4-3a', name:'남부 리우 협회 4과 부장 로쟈',     grade:3, season:4},
-    {id:'ro-s5-3a', name:'북부 제뱌찌 협회 3과 로쟈',        grade:3, season:5},
-    {id:'ro-s6-3a', name:'라만차랜드 공주 로쟈',             grade:3, season:6},
-    {id:'ro-s6-3b', name:'흑수 - 사 로쟈',                  grade:3, season:6},
-    {id:'ro-vp-3a', name:'로보토미 E.G.O::눈물로 벼려낸 검 로쟈', grade:3, season:'vp'},
-    {id:'ro-s6-3c', name:'R사 제 4무리 순록팀 로쟈',         grade:3, season:6},
-    {id:'ro-s7-3a', name:'약지 야수파 도슨트 로쟈',                  grade:3, season:7},
-    {id:'ro-s7-3b', name:'거미집 엄지 아비 로쟈',                   grade:3, season:7},
-    {id:'ro-s8-3a', name:'오트쿠튀르::수선실 로쟈',                  grade:3, season:8},
-    /* 에고 */
+    {id:'ro-s1-1', name:'LCB 수감자 로쟈', grade:1, season:0, releaseDate:'2023-02-27', source:'base'},
+    {id:'ro-s1-3a', name:'흑운회 와카슈 로쟈', grade:3, season:0, releaseDate:'2023-02-27'},
+    {id:'ro-s1-2a', name:'LCCB 대리 로쟈', grade:2, season:1, releaseDate:'2023-02-27'},
+    {id:'ro-s2-2a', name:'N사 중간 망치 로쟈', grade:2, season:1, releaseDate:'2023-03-09'},
+    {id:'ro-s2-3a', name:'장미스패너 공방 대표 로쟈', grade:3, season:2, releaseDate:'2023-06-01'},
+    {id:'ro-s3-2a', name:'남부 츠바이 협회 5과 로쟈', grade:2, season:0, releaseDate:'2023-07-13'},
+    {id:'ro-s3-3a', name:'남부 디에치 협회 4과 로쟈', grade:3, season:0, releaseDate:'2023-09-21'},
+    {id:'ro-s4-3a', name:'남부 리우 협회 4과 부장 로쟈', grade:3, season:0, releaseDate:'2024-03-07'},
+    {id:'ro-s4-2a', name:'T사 2등급 징수직 직원 로쟈', grade:2, season:0, releaseDate:'2024-06-27'},
+    {id:'ro-s5-3a', name:'북부 제뱌찌 협회 3과 로쟈', grade:3, season:0, releaseDate:'2024-09-19'},
+    {id:'ro-s6-3a', name:'라만차랜드 공주 로쟈', grade:3, season:5, releaseDate:'2024-11-14'},
+    {id:'ro-s6-3b', name:'흑수 - 사 로쟈', grade:3, season:6, releaseDate:'2025-05-15'},
+    {id:'ro-vp-3a', name:'로보토미 E.G.O::눈물로 벼려낸 검 로쟈', grade:3, season:null, releaseDate:'2025-07-17', source:'vp'},
+    {id:'ro-s6-3c', name:'R사 제 4무리 순록팀 로쟈', grade:3, season:0, releaseDate:'2025-12-18'},
+    {id:'ro-s7-3a', name:'약지 야수파 도슨트 로쟈', grade:3, season:7, releaseDate:'2026-04-16', source:'event'},
+    {id:'ro-s7-3b', name:'거미집 엄지 아비 로쟈', grade:3, season:7, releaseDate:'2026-06-25'},
+    {id:'ro-s8-3a', name:'오트쿠튀르::수선실 로쟈', grade:3, season:8, releaseDate:'2026-09-24'},
   ],
   'sinclair':[
-    /* ★1 */
-    {id:'si-s1-1',  name:'LCB 수감자 싱클레어',                  grade:1, season:0},
-    /* ★2 시즌 */
-    {id:'si-s1-2a', name:'남부 츠바이 협회 6과 싱클레어',        grade:2, season:1},
-    {id:'si-s2-2a', name:'마리아치 보스 싱클레어',               grade:2, season:2},
-    {id:'si-s3-2a', name:'로보토미 E.G.O::홍적 싱클레어',        grade:2, season:3},
-    {id:'si-s4-2a', name:'어금니 보트 센터 해결사 싱클레어',     grade:2, season:4},
-    {id:'si-s5-2a', name:'서부 츠바이 협회 3과 싱클레어',        grade:2, season:5},
-    /* ★3 시즌 */
-    {id:'si-s1-3a', name:'검계 살수 싱클레어',                   grade:3, season:1},
-    {id:'si-s2-3a', name:'쥐어들 자 싱클레어',                   grade:3, season:2},
-    {id:'si-s3-3a', name:'남부 섕크 협회 4과 부장 싱클레어',     grade:3, season:3},
-    {id:'si-vp-3a', name:'새벽 사무소 해결사 싱클레어',          grade:3, season:'vp'},
-    {id:'si-vp-3b', name:'쐐기 사무소 해결사 싱클레어',                grade:3, season:'vp'},
-    {id:'si-s5-3a', name:'북부 제뱌찌 협회 3과 싱클레어',        grade:3, season:5},
-    {id:'si-s6-3a', name:'중지 작은 아우 싱클레어',              grade:3, season:6},
-    {id:'si-s7-3a', name:'동부 엄지 솔다토 II 싱클레어',         grade:3, season:7},
-    {id:'si-s7-3b', name:'흑수 - 유 싱클레어',                  grade:3, season:7},
-    {id:'si-s7-3c', name:'거미집 소지 제자 싱클레어',            grade:3, season:7},
-    {id:'si-s8-3a', name:'오트쿠튀르::르루주 붉은 신 싱클레어',           grade:3, season:8},
-    /* 에고 */
+    {id:'si-s1-1', name:'LCB 수감자 싱클레어', grade:1, season:0, releaseDate:'2023-02-27', source:'base'},
+    {id:'si-s1-3a', name:'검계 살수 싱클레어', grade:3, season:0, releaseDate:'2023-02-27'},
+    {id:'si-s1-2a', name:'남부 츠바이 협회 6과 싱클레어', grade:2, season:0, releaseDate:'2023-02-27'},
+    {id:'si-s2-2a', name:'마리아치 보스 싱클레어', grade:2, season:1, releaseDate:'2023-02-27'},
+    {id:'si-s2-3a', name:'쥐어들 자 싱클레어', grade:3, season:1, releaseDate:'2023-05-04'},
+    {id:'si-s3-2a', name:'로보토미 E.G.O::홍적 싱클레어', grade:2, season:2, releaseDate:'2023-06-29'},
+    {id:'si-s4-2a', name:'어금니 보트 센터 해결사 싱클레어', grade:2, season:2, releaseDate:'2023-07-27', source:'event-reward'},
+    {id:'si-s3-3a', name:'남부 섕크 협회 4과 부장 싱클레어', grade:3, season:0, releaseDate:'2023-12-21'},
+    {id:'si-vp-3a', name:'새벽 사무소 해결사 싱클레어', grade:3, season:null, releaseDate:'2024-05-02', source:'vp'},
+    {id:'si-s5-2a', name:'서부 츠바이 협회 3과 싱클레어', grade:2, season:5, releaseDate:'2024-10-10'},
+    {id:'si-s5-3a', name:'북부 제뱌찌 협회 3과 싱클레어', grade:3, season:0, releaseDate:'2024-11-28'},
+    {id:'si-s6-3a', name:'중지 작은 아우 싱클레어', grade:3, season:0, releaseDate:'2025-04-03'},
+    {id:'si-s7-3a', name:'동부 엄지 솔다토II 싱클레어', grade:3, season:6, releaseDate:'2025-06-19'},
+    {id:'si-s7-3b', name:'흑수 - 유 싱클레어', grade:3, season:6, releaseDate:'2025-08-28', source:'event-reward'},
+    {id:'si-s7-3c', name:'거미집 소지 제자 싱클레어', grade:3, season:7, releaseDate:'2026-02-05'},
+    {id:'si-s8-3a', name:'오트쿠튀르::르루주 붉은 신 싱클레어', grade:3, season:8, releaseDate:'2026-10-15'},
+    {id:'si-vp-3b', name:'쐐기 사무소 해결사 싱클레어', grade:3, season:null, releaseDate:'2026-11-12', source:'vp'},
   ],
   'outis':[
-    /* ★1 */
-    {id:'ou-s1-1',  name:'LCB 수감자 오티스',                  grade:1, season:0},
-    /* ★2 시즌 */
-    {id:'ou-s1-2a', name:'검계 살수 오티스',                   grade:2, season:1},
-    {id:'ou-s2-2a', name:'G사 부장 오티스',                    grade:2, season:2},
-    {id:'ou-s3-2a', name:'남부 섕크 협회 4과 오티스',          grade:2, season:3},
-    {id:'ou-s4-2a', name:'약지 점묘파 스튜던트 오티스',        grade:2, season:4},
-    /* ★3 시즌 */
-    {id:'ou-s1-3a', name:'남부 세븐 협회 6과 부장 오티스',     grade:3, season:1},
-    {id:'ou-s2-3a', name:'어금니 사무소 해결사 오티스',        grade:3, season:2},
-    {id:'ou-s3-3a', name:'로보토미 E.G.O::마탄 오티스',        grade:3, season:'vp'},
-    {id:'ou-s4-3a', name:'워더링하이츠 치프 버틀러 오티스',    grade:3, season:4},
-    {id:'ou-s5-3a', name:'W사 3등급 정리 요원 팀장 오티스',    grade:3, season:5},
-    {id:'ou-s5-3b', name:'라만차랜드 이발사 오티스',           grade:3, season:5},
-    {id:'ou-s6-3a', name:'흑수 - 묘 오티스',                  grade:3, season:6},
-    {id:'ou-s7-3a', name:'T사 3등급 강력징수직 직원 오티스',   grade:3, season:7},
-    {id:'ou-s7-3b', name:'LCA 우제트 선봉 3팀 팀장 오티스',    grade:3, season:7},
-    {id:'ou-s7-3c', name:'거미집 중지 아비 오티스',                  grade:3, season:7},
-    {id:'ou-vp-3b', name:'쐐기 사무소 대표 오티스',                  grade:3, season:'vp'},
-    /* 에고 */
+    {id:'ou-s1-1', name:'LCB 수감자 오티스', grade:1, season:0, releaseDate:'2023-02-27', source:'base'},
+    {id:'ou-s1-2a', name:'검계 살수 오티스', grade:2, season:0, releaseDate:'2023-02-27'},
+    {id:'ou-s2-2a', name:'G사 부장 오티스', grade:2, season:1, releaseDate:'2023-02-27'},
+    {id:'ou-s1-3a', name:'남부 세븐 협회 6과 부장 오티스', grade:3, season:0, releaseDate:'2023-04-06'},
+    {id:'ou-s2-3a', name:'어금니 사무소 해결사 오티스', grade:3, season:2, releaseDate:'2023-09-14', source:'event-reward'},
+    {id:'ou-s3-2a', name:'남부 섕크 협회 4과 오티스', grade:2, season:0, releaseDate:'2023-12-21'},
+    {id:'ou-s3-3a', name:'로보토미 E.G.O::마탄 오티스', grade:3, season:null, releaseDate:'2024-01-11', source:'vp'},
+    {id:'ou-s4-3a', name:'워더링하이츠 치프 버틀러 오티스', grade:3, season:4, releaseDate:'2024-03-28'},
+    {id:'ou-s4-2a', name:'약지 점묘파 스튜던트 오티스', grade:2, season:0, releaseDate:'2024-05-16'},
+    {id:'ou-s5-3a', name:'W사 3등급 정리 요원 팀장 오티스', grade:3, season:0, releaseDate:'2024-07-25'},
+    {id:'ou-s5-3b', name:'라만차랜드 이발사 오티스', grade:3, season:5, releaseDate:'2024-10-17'},
+    {id:'ou-s6-3a', name:'흑수 - 묘 오티스', grade:3, season:5, releaseDate:'2025-03-20', source:'event-reward'},
+    {id:'ou-s7-3a', name:'T사 3등급 강력징수직 직원 오티스', grade:3, season:6, releaseDate:'2025-07-31', source:'event'},
+    {id:'ou-s7-3b', name:'LCA 우제트 선봉 3팀 팀장 오티스', grade:3, season:7, releaseDate:'2025-12-31'},
+    {id:'ou-s7-3c', name:'거미집 중지 아비 오티스', grade:3, season:7, releaseDate:'2026-05-28'},
+    {id:'ou-vp-3b', name:'쐐기 사무소 대표 오티스', grade:3, season:null, releaseDate:'2026-11-12', source:'vp'},
   ],
   'gregor':[
-    /* ★1 */
-    {id:'gr-s1-1',  name:'LCB 수감자 그레고르',               grade:1, season:0},
-    /* ★2 통상 */
-    {id:'gr-s0-2a', name:'남부 리우 협회 6과 그레고르',       grade:2, season:0},
-    /* ★2 시즌 */
-    {id:'gr-s1-2a', name:'료.고.파. 조수 그레고르',           grade:2, season:1},
-    {id:'gr-s2-2a', name:'장미스패너 공방 해결사 그레고르',   grade:2, season:2},
-    {id:'gr-s3-2a', name:'흑운회 부조장 그레고르',            grade:2, season:3},
-    /* ★3 시즌 */
-    {id:'gr-s1-3a', name:'G사 일등대리 그레고르',             grade:3, season:1},
-    {id:'gr-s2-3a', name:'남부 츠바이 협회 4과 그레고르',     grade:3, season:2},
-    {id:'gr-s3-3a', name:'쌍갈고리 해적단 부선장 그레고르',   grade:3, season:3},
-    {id:'gr-s4-3a', name:'에드가 가문 승계자 그레고르',       grade:3, season:4},
-    {id:'gr-s5-3a', name:'라만차랜드 신부 그레고르',          grade:3, season:5},
-    {id:'gr-s6-3a', name:'불주먹 사무소 생존자 그레고르',     grade:3, season:6},
-    {id:'gr-s6-3b', name:'흑수 - 사 그레고르',               grade:3, season:6},
-    {id:'gr-vp-3a', name:'밤의 송곳 카피타노 그레고르',       grade:3, season:'vp'},
-    {id:'gr-vp-3b', name:'새벽 사무소 대표 그레고르',                 grade:3, season:'vp'},
-    {id:'gr-s7-3a', name:'로보토미 E.G.O::램프 그레고르',     grade:3, season:7},
-     {id:'gr-s7-3b', name:'LCE E.G.O:: AEDD 그레고르',     grade:3, season:7},
+    {id:'gr-s1-1', name:'LCB 수감자 그레고르', grade:1, season:0, releaseDate:'2023-02-27', source:'base'},
+    {id:'gr-s0-2a', name:'남부 리우 협회 6과 그레고르', grade:2, season:0, releaseDate:'2023-02-27'},
+    {id:'gr-s1-3a', name:'G사 일등대리 그레고르', grade:3, season:1, releaseDate:'2023-02-27'},
+    {id:'gr-s1-2a', name:'료. 고. 파. 조수 그레고르', grade:2, season:1, releaseDate:'2023-04-20', source:'event-reward'},
+    {id:'gr-s2-2a', name:'장미스패너 공방 해결사 그레고르', grade:2, season:2, releaseDate:'2023-06-08'},
+    {id:'gr-s2-3a', name:'남부 츠바이 협회 4과 그레고르', grade:3, season:0, releaseDate:'2023-08-10'},
+    {id:'gr-s3-3a', name:'쌍갈고리 해적단 부선장 그레고르', grade:3, season:3, releaseDate:'2023-11-16'},
+    {id:'gr-s3-2a', name:'흑운회 부조장 그레고르', grade:2, season:3, releaseDate:'2024-02-22', source:'event'},
+    {id:'gr-s4-3a', name:'에드가 가문 승계자 그레고르', grade:3, season:4, releaseDate:'2024-04-04'},
+    {id:'gr-s5-3a', name:'라만차랜드 신부 그레고르', grade:3, season:5, releaseDate:'2024-10-31'},
+    {id:'gr-s6-3a', name:'불주먹 사무소 생존자 그레고르', grade:3, season:5, releaseDate:'2025-03-06'},
+    {id:'gr-s6-3b', name:'흑수 - 사 그레고르', grade:3, season:6, releaseDate:'2025-05-15'},
+    {id:'gr-vp-3a', name:'밤의 송곳 카피타노 그레고르', grade:3, season:null, releaseDate:'2025-11-06', source:'vp'},
+    {id:'gr-s7-3a', name:'로보토미 E.G.O::램프 그레고르', grade:3, season:7, releaseDate:'2026-02-05'},
+    {id:'gr-s7-3b', name:'LCE E.G.O::AEDD 그레고르', grade:3, season:7, releaseDate:'2026-03-19', source:'event'},
+    {id:'gr-vp-3b', name:'새벽 사무소 대표 그레고르', grade:3, season:null, releaseDate:'2026-07-09', source:'vp'},
   ],
 };
 
 const WEDGE_PAIR = ['do-vp-3b', 'si-vp-3b'];
 
-/* E.G.O 목록 — season: 0=통상, 1~8=시즌 (패스 포함), 'vp'=발푸르기스의 밤 한정, 'event'=이벤트 */
+/* E.G.O 역시 수감자별 출시일 순으로 등록한다. */
 const EGO_LIST = {
   'yi-sang':[
-    /* ZAYIN (★2) */
-    {id:'ys-e1',  name:'E.G.O::오감도 이상',           grade:'ZAYIN', season:0},
-    {id:'ys-e2',  name:'E.G.O::지난 날 이상',          grade:'ZAYIN', season:0},
-    /* TETH (★2) */
-    {id:'ys-e3',  name:'E.G.O::4번째 성냥불 이상',     grade:'TETH', season:1},
-    {id:'ys-e4',  name:'E.G.O::소망석 이상',           grade:'TETH', season:0},
-    /* HE (★3) */
-    {id:'ys-e5',  name:'E.G.O::차원찢개 이상',         grade:'HE', season:0},
-    {id:'ys-e6',  name:'E.G.O::흉탄 이상',             grade:'HE', season:5},
-    {id:'ys-e9',  name:'E.G.O::엄숙한 애도 이상',                grade:'HE',    season:'vp'},
-    /* WAW (★3) */
-    {id:'ys-e7',  name:'E.G.O::여우비 이상',           grade:'WAW', season:2},
-    {id:'ys-e8',  name:'E.G.O::삼천대세계 이상',       grade:'WAW', season:6},
+    {id:'ys-e1', name:'E.G.O::오감도 이상', grade:'ZAYIN', season:0, releaseDate:'2023-02-27', source:'base'},
+    {id:'ys-e3', name:'E.G.O::4번째 성냥불 이상', grade:'TETH', season:1, releaseDate:'2023-02-27', source:'pass'},
+    {id:'ys-e4', name:'E.G.O::소망석 이상', grade:'TETH', season:0, releaseDate:'2023-02-27'},
+    {id:'ys-e5', name:'E.G.O::차원찢개 이상', grade:'HE', season:0, releaseDate:'2023-05-18'},
+    {id:'ys-e7', name:'E.G.O::여우비 이상', grade:'WAW', season:2, releaseDate:'2023-06-15', source:'pass'},
+    {id:'ys-e2', name:'E.G.O::지난 날 이상', grade:'ZAYIN', season:4, releaseDate:'2024-04-04', source:'pass'},
+    {id:'ys-e6', name:'E.G.O::흉탄 이상', grade:'HE', season:5, releaseDate:'2024-11-14'},
+    {id:'ys-e8', name:'E.G.O::삼천대세계 [三千大世界] 이상', grade:'WAW', season:7, releaseDate:'2026-01-15', source:'pass'},
+    {id:'ys-e9', name:'E.G.O::엄숙한 애도 이상', grade:'HE', season:null, releaseDate:'2026-07-09', source:'vp'},
   ],
   'faust':[
-    /* ZAYIN */
-    {id:'fa-e1',  name:'E.G.O::표상 방출기 파우스트',  grade:'ZAYIN', season:0},
-    /* TETH */
-    {id:'fa-e2',  name:'E.G.O::저주못 파우스트',       grade:'TETH',  season:0},
-    {id:'fa-e3',  name:'E.G.O::9장 2절 파우스트',      grade:'TETH',  season:3},
-    {id:'fa-e4',  name:'E.G.O::올가미 파우스트',       grade:'TETH',  season:5},
-    /* HE */
-    {id:'fa-e5',  name:'E.G.O::물주머니 파우스트',     grade:'HE',    season:1},
-    {id:'fa-e6',  name:'E.G.O::전봇대 파우스트',       grade:'HE',    season:0},
-    {id:'fa-e7',  name:'E.G.O::흉통 파우스트',         grade:'HE',    season:0},
-    {id:'fa-e8',  name:'E.G.O::명령 : 용해 파우스트',  grade:'HE',    season:6},
-    {id:'fa-e9',  name:'E.G.O::홍염살 파우스트',       grade:'HE',    season:7},
-    /* WAW */
-    {id:'fa-e10', name:'E.G.O::영속 파우스트',         grade:'WAW',   season:4},
-    {id:'fa-e11', name:'E.G.O::구멍 파우스트',                  grade:'WAW',   season:8},
+    {id:'fa-e1', name:'E.G.O::표상 방출기 파우스트', grade:'ZAYIN', season:0, releaseDate:'2023-02-27', source:'base'},
+    {id:'fa-e5', name:'E.G.O::물주머니 파우스트', grade:'HE', season:1, releaseDate:'2023-02-27', source:'pass'},
+    {id:'fa-e2', name:'E.G.O::저주못 파우스트', grade:'TETH', season:0, releaseDate:'2023-02-27'},
+    {id:'fa-e6', name:'E.G.O::전봇대 파우스트', grade:'HE', season:0, releaseDate:'2023-04-06'},
+    {id:'fa-e3', name:'E.G.O::9장 2절 파우스트', grade:'TETH', season:3, releaseDate:'2023-11-23', source:'pass'},
+    {id:'fa-e10', name:'E.G.O::영속 파우스트', grade:'WAW', season:4, releaseDate:'2024-06-13', source:'event'},
+    {id:'fa-e4', name:'E.G.O::올가미 파우스트', grade:'TETH', season:5, releaseDate:'2024-10-17', source:'pass'},
+    {id:'fa-e7', name:'E.G.O::흉통 파우스트', grade:'HE', season:5, releaseDate:'2025-02-20'},
+    {id:'fa-e8', name:'E.G.O::명령 : 용해 파우스트', grade:'HE', season:null, releaseDate:'2025-09-25', source:'collab'},
+    {id:'fa-e9', name:'E.G.O::홍염살 파우스트', grade:'HE', season:7, releaseDate:'2026-03-19', source:'event'},
+    {id:'fa-e11', name:'E.G.O::구멍 파우스트', grade:'WAW', season:8, releaseDate:'2026-10-01', source:'pass'},
   ],
   'don':[
-    /* ZAYIN */
-    {id:'do-e1',  name:'E.G.O::라 샹그레 데 산쵸 돈키호테', grade:'ZAYIN', season:0},
-    {id:'do-e10', name:'E.G.O::난 가위를 낼게, 너는? 돈키호테',       grade:'ZAYIN', season:7},
-    /* TETH */
-    {id:'do-e2',  name:'E.G.O::평생 스튜 돈키호테',          grade:'TETH',  season:0},
-    {id:'do-e3',  name:'E.G.O::소망석 돈키호테',             grade:'TETH',  season:0},
-    {id:'do-e4',  name:'E.G.O::전기울음 돈키호테',           grade:'TETH',  season:0},
-    /* HE */
-    {id:'do-e5',  name:'E.G.O::물주머니 돈키호테',           grade:'HE',    season:0},
-    {id:'do-e6',  name:'E.G.O::전봇대 돈키호테',             grade:'HE',    season:2},
-    {id:'do-e7',  name:'E.G.O::홍적 돈키호테',               grade:'HE',    season:5},
-    /* WAW */
-    {id:'do-e8',  name:'E.G.O::갈망 - 미르칼라 돈키호테',   grade:'WAW',   season:5},
-    {id:'do-e9',  name:'E.G.O::사랑과 증오의 이름으로 돈키호테', grade:'WAW', season:'vp'},
+    {id:'do-e1', name:'E.G.O::라 샹그레 데 산쵸 돈키호테', grade:'ZAYIN', season:0, releaseDate:'2023-02-27', source:'base'},
+    {id:'do-e5', name:'E.G.O::물주머니 돈키호테', grade:'HE', season:1, releaseDate:'2023-02-27', source:'pass'},
+    {id:'do-e6', name:'E.G.O::전봇대 돈키호테', grade:'HE', season:0, releaseDate:'2023-03-30'},
+    {id:'do-e2', name:'E.G.O::평생 스튜 돈키호테', grade:'TETH', season:1, releaseDate:'2023-04-20', source:'event-reward'},
+    {id:'do-e3', name:'E.G.O::소망석 돈키호테', grade:'TETH', season:0, releaseDate:'2024-02-15'},
+    {id:'do-e4', name:'E.G.O::전기울음 돈키호테', grade:'TETH', season:4, releaseDate:'2024-04-11', source:'pass'},
+    {id:'do-e8', name:'E.G.O::갈망-미르칼라 돈키호테', grade:'WAW', season:5, releaseDate:'2024-10-24', source:'pass'},
+    {id:'do-e7', name:'E.G.O::홍적 돈키호테', grade:'HE', season:6, releaseDate:'2025-05-22', source:'pass'},
+    {id:'do-e9', name:'E.G.O::사랑과 증오의 이름으로 돈키호테', grade:'WAW', season:null, releaseDate:'2025-07-17', source:'vp'},
+    {id:'do-e10', name:'E.G.O::난 가위를 낼게, 너는? 돈키호테', grade:'ZAYIN', season:7, releaseDate:'2026-08-06'},
   ],
   'ryoshu':[
-    /* ZAYIN */
-    {id:'ry-e1',  name:'E.G.O::삼라염상 료슈',               grade:'ZAYIN', season:0},
-    {id:'ry-e2',  name:'E.G.O::소다 료슈',                   grade:'ZAYIN', season:0},
-    /* TETH */
-    {id:'ry-e3',  name:'E.G.O::적안 료슈',                   grade:'TETH',  season:0},
-    {id:'ry-e4',  name:'E.G.O::맹목 료슈',                   grade:'TETH',  season:0},
-    /* HE */
-    {id:'ry-e5',  name:'E.G.O::4번째 성냥불 료슈',           grade:'HE',    season:2},
-    {id:'ry-e6',  name:'E.G.O::적안(開) 료슈',               grade:'HE',    season:4},
-    {id:'ry-e7',  name:'E.G.O::흉통 료슈',                   grade:'HE',    season:3},
-    /* WAW */
-    {id:'ry-e8',  name:'N사 E.G.O::경멸, 경외 료슈',         grade:'WAW',   season:7},
-    {id:'ry-e9',  name:'E.G.O::삼천대세계 료슈',             grade:'WAW',   season:6},
-    /* 발푸밤 */
-    {id:'ry-evp', name:'로보토미 E.G.O::적안 참회 료슈',     grade:'WAW',   season:2},
+    {id:'ry-e1', name:'E.G.O::삼라염상 료슈', grade:'ZAYIN', season:0, releaseDate:'2023-02-27', source:'base'},
+    {id:'ry-e5', name:'E.G.O::4번째 성냥불 료슈', grade:'HE', season:1, releaseDate:'2023-02-27', source:'pass'},
+    {id:'ry-e3', name:'E.G.O::적안 료슈', grade:'TETH', season:0, releaseDate:'2023-06-29'},
+    {id:'ry-e6', name:'E.G.O::적안(開) 료슈', grade:'HE', season:0, releaseDate:'2023-06-29'},
+    {id:'ry-e2', name:'E.G.O::소다 료슈', grade:'ZAYIN', season:2, releaseDate:'2023-07-27', source:'event-reward'},
+    {id:'ry-e4', name:'E.G.O::맹목 료슈', grade:'TETH', season:3, releaseDate:'2023-11-30', source:'pass'},
+    {id:'ry-e8', name:'E.G.O::경멸, 경외 료슈', grade:'WAW', season:4, releaseDate:'2024-07-11'},
+    {id:'ry-e7', name:'E.G.O::흉통 료슈', grade:'HE', season:5, releaseDate:'2025-01-23', source:'event'},
+    {id:'ry-e9', name:'E.G.O::삼천대세계 [三千大世界] 료슈', grade:'WAW', season:7, releaseDate:'2026-01-15', source:'pass'},
   ],
   'meursault':[
-    /* ZAYIN */
-    {id:'me-e1',  name:'E.G.O::타인의 사슬 뫼르소',     grade:'ZAYIN', season:0},
-    /* TETH */
-    {id:'me-e2',  name:'E.G.O::나사빠진 일격 뫼르소',   grade:'TETH',  season:0},
-    {id:'me-e3',  name:'E.G.O::후회 뫼르소',            grade:'TETH',  season:0},
-    {id:'me-e4',  name:'E.G.O::전기울음 뫼르소',        grade:'TETH',  season:0},
-    /* HE */
-    {id:'me-e5',  name:'E.G.O::집행 뫼르소',            grade:'HE',    season:2},
-    {id:'me-e6',  name:'E.G.O::카포테 뫼르소',          grade:'HE',    season:0},
-    {id:'me-e9',  name:'E.G.O::착영휘도 [着影揮刀] 뫼르소',          grade:'HE',    season:'event'},
-    /* WAW */
-    {id:'me-e7',  name:'E.G.O::갈망 - 미르칼라 뫼르소', grade:'WAW',   season:5},
-    {id:'me-e8',  name:'E.G.O::분쇄될 과거 뫼르소',     grade:'WAW',   season:1},
-    {id:'me-e10', name:'E.G.O::구멍 뫼르소',                   grade:'WAW',   season:8},
-    /* 발푸밤 */
-    {id:'me-evp', name:'E.G.O::TETH 후회 뫼르소',       grade:'TETH',  season:'vp'},
+    {id:'me-e1', name:'E.G.O::타인의 사슬 뫼르소', grade:'ZAYIN', season:0, releaseDate:'2023-02-27', source:'base'},
+    {id:'me-e2', name:'E.G.O::나사빠진 일격 뫼르소', grade:'TETH', season:1, releaseDate:'2023-02-27', source:'pass'},
+    {id:'me-e5', name:'E.G.O::집행 뫼르소', grade:'HE', season:0, releaseDate:'2023-02-27'},
+    {id:'me-e6', name:'E.G.O::카포테 뫼르소', grade:'HE', season:2, releaseDate:'2023-06-01', source:'pass'},
+    {id:'me-evp', name:'E.G.O::후회 뫼르소', grade:'TETH', season:null, releaseDate:'2023-10-26', source:'vp'},
+    {id:'me-e4', name:'E.G.O::전기울음 뫼르소', grade:'TETH', season:4, releaseDate:'2024-04-11', source:'pass'},
+    {id:'me-e7', name:'E.G.O::갈망-미르칼라 뫼르소', grade:'WAW', season:5, releaseDate:'2024-10-24', source:'pass'},
+    {id:'me-e8', name:'E.G.O::분쇄될 과거 뫼르소', grade:'WAW', season:6, releaseDate:'2025-07-31', source:'event'},
+    {id:'me-e9', name:'E.G.O::착영휘도[着影揮刀] 뫼르소', grade:'HE', season:7, releaseDate:'2026-06-11', source:'event'},
+    {id:'me-e10', name:'E.G.O::구멍 뫼르소', grade:'WAW', season:8, releaseDate:'2026-10-01', source:'pass'},
   ],
   'hong-lu':[
-    /* ZAYIN */
-    {id:'hl-e1',  name:'E.G.O::허환경 홍루',             grade:'ZAYIN', season:0},
-    {id:'hl-e10', name:'E.G.O::거절선포 홍루',                  grade:'ZAYIN', season:8},
-    /* TETH */
-    {id:'hl-e2',  name:'E.G.O::분홍욕망 홍루',           grade:'TETH',  season:0},
-    {id:'hl-e3',  name:'E.G.O::소다 홍루',               grade:'TETH',  season:0},
-    {id:'hl-e4',  name:'E.G.O::낮은울음 홍루',           grade:'TETH',  season:0},
-    {id:'hl-e5',  name:'E.G.O::올가미 홍루',             grade:'TETH',  season:5},
-    /* HE */
-    {id:'hl-e6',  name:'E.G.O::차원찢개 홍루',           grade:'HE',    season:0},
-    {id:'hl-e7',  name:'E.G.O::들끓는 부식 홍루',        grade:'HE',    season:3},
-    {id:'hl-e8',  name:'E.G.O::영작오 [宁作吾] 홍루',    grade:'HE',    season:6},
-    {id:'hl-e11', name:'E.G.O::눈물로 벼려낸 검 홍루',             grade:'HE',    season:'vp'},
-    /* WAW */
-    {id:'hl-e9',  name:'E.G.O::오혈읍루 [汚血泣淚] 홍루', grade:'WAW',  season:7},
+    {id:'hl-e1', name:'E.G.O::허환경 홍루', grade:'ZAYIN', season:0, releaseDate:'2023-02-27', source:'base'},
+    {id:'hl-e2', name:'E.G.O::분홍욕망 홍루', grade:'TETH', season:1, releaseDate:'2023-02-27', source:'pass'},
+    {id:'hl-e6', name:'E.G.O::차원찢개 홍루', grade:'HE', season:0, releaseDate:'2023-05-18'},
+    {id:'hl-e3', name:'E.G.O::소다 홍루', grade:'TETH', season:2, releaseDate:'2023-07-27', source:'event'},
+    {id:'hl-e7', name:'E.G.O::들끓는 부식 홍루', grade:'HE', season:3, releaseDate:'2023-11-23', source:'pass'},
+    {id:'hl-e4', name:'E.G.O::낮은울음 홍루', grade:'TETH', season:0, releaseDate:'2024-05-30'},
+    {id:'hl-e5', name:'E.G.O::올가미 홍루', grade:'TETH', season:5, releaseDate:'2024-10-17', source:'pass'},
+    {id:'hl-e9', name:'E.G.O::오혈읍루 [汚血泣淚] 홍루', grade:'WAW', season:6, releaseDate:'2025-05-29', source:'pass'},
+    {id:'hl-e8', name:'E.G.O::영작오 [宁作吾] 홍루', grade:'HE', season:null, releaseDate:'2025-09-25', source:'collab'},
+    {id:'hl-e10', name:'E.G.O::거절선포 홍루', grade:'ZAYIN', season:8, releaseDate:'2026-09-24', source:'pass'},
+    {id:'hl-e11', name:'E.G.O::눈물로 벼려낸 검 홍루', grade:'HE', season:null, releaseDate:'2026-11-12', source:'vp'},
   ],
   'heathcliff':[
-    /* ZAYIN */
-    {id:'hc-e1',  name:'E.G.O::시체자루 히스클리프',         grade:'ZAYIN', season:0},
-    {id:'hc-e2',  name:'E.G.O::홀리데이 히스클리프',         grade:'ZAYIN', season:0},
-    /* TETH */
-    {id:'hc-e3',  name:'E.G.O::AEDD 히스클리프',             grade:'TETH',  season:2},
-    {id:'hc-e4',  name:'E.G.O::흉탄 히스클리프',             grade:'TETH',  season:0},
-    {id:'hc-e5',  name:'E.G.O::입주 신고 히스클리프',        grade:'TETH',  season:3},
-    /* HE */
-    {id:'hc-e6',  name:'E.G.O::전봇대 히스클리프',           grade:'HE',    season:3},
-    {id:'hc-e7',  name:'E.G.O::공즉시색 히스클리프',         grade:'HE',    season:5},
-    {id:'hc-e8',  name:'E.G.O::쏠린 관성 히스클리프',        grade:'HE',    season:0},
-    /* WAW */
-    {id:'hc-e9',  name:'E.G.O::구속 히스클리프',             grade:'WAW',   season:4},
-    /* 발푸밤 */
-
+    {id:'hc-e1', name:'E.G.O::시체자루 히스클리프', grade:'ZAYIN', season:0, releaseDate:'2023-02-27', source:'base'},
+    {id:'hc-e6', name:'E.G.O::전봇대 히스클리프', grade:'HE', season:1, releaseDate:'2023-02-27', source:'pass'},
+    {id:'hc-e3', name:'E.G.O::AEDD 히스클리프', grade:'TETH', season:2, releaseDate:'2023-06-08', source:'pass'},
+    {id:'hc-e7', name:'E.G.O::공즉시색 히스클리프', grade:'HE', season:0, releaseDate:'2023-10-12'},
+    {id:'hc-e2', name:'E.G.O::홀리데이 히스클리프', grade:'ZAYIN', season:3, releaseDate:'2023-12-28', source:'event-reward'},
+    {id:'hc-e9', name:'E.G.O::구속 히스클리프', grade:'WAW', season:4, releaseDate:'2024-04-11', source:'pass'},
+    {id:'hc-e4', name:'E.G.O::흉탄 히스클리프', grade:'TETH', season:0, releaseDate:'2024-07-25'},
+    {id:'hc-e8', name:'E.G.O::쏠린 관성 히스클리프', grade:'HE', season:0, releaseDate:'2024-11-28'},
+    {id:'hc-e5', name:'E.G.O::입주 신고 히스클리프', grade:'TETH', season:7, releaseDate:'2026-01-08', source:'pass'},
   ],
   'ishmael':[
-    /* ZAYIN */
-    {id:'is-e1',  name:'E.G.O::작살박이 이스마엘',         grade:'ZAYIN', season:0},
-    {id:'is-e2',  name:'E.G.O::즉저살 [蝍蛆殺] 이스마엘', grade:'ZAYIN', season:0},
-    /* TETH */
-    {id:'is-e3',  name:'E.G.O::분홍욕망 이스마엘',         grade:'TETH',  season:0},
-    {id:'is-e4',  name:'E.G.O::카포테 이스마엘',           grade:'TETH',  season:0},
-    {id:'is-e5',  name:'E.G.O::지난 날 이스마엘',          grade:'TETH',  season:0},
-    /* HE */
-    {id:'is-e6',  name:'E.G.O::홍염살 이스마엘',           grade:'HE',    season:0},
-    {id:'is-e7',  name:'E.G.O::날갯짓 이스마엘',           grade:'HE',    season:3},
-    {id:'is-e8',  name:'E.G.O::크리스마스 악몽 이스마엘',  grade:'HE',    season:'event'},
-    {id:'is-e9',  name:'E.G.O::파도의 만가 이스마엘',      grade:'HE',    season:6},
-    /* WAW */
-    {id:'is-e10', name:'E.G.O::맹목 이스마엘',             grade:'WAW',   season:5},
+    {id:'is-e1', name:'E.G.O::작살박이 이스마엘', grade:'ZAYIN', season:0, releaseDate:'2023-02-27', source:'base'},
+    {id:'is-e3', name:'E.G.O::분홍욕망 이스마엘', grade:'TETH', season:1, releaseDate:'2023-02-27', source:'pass'},
+    {id:'is-e6', name:'E.G.O::홍염살 이스마엘', grade:'HE', season:0, releaseDate:'2023-02-27'},
+    {id:'is-e4', name:'E.G.O::카포테 이스마엘', grade:'TETH', season:2, releaseDate:'2023-06-01', source:'pass'},
+    {id:'is-e10', name:'E.G.O::맹목 이스마엘', grade:'WAW', season:3, releaseDate:'2023-11-30', source:'pass'},
+    {id:'is-e7', name:'E.G.O::날갯짓 이스마엘', grade:'HE', season:null, releaseDate:'2024-05-02', source:'vp'},
+    {id:'is-e5', name:'E.G.O::지난 날 이스마엘', grade:'TETH', season:0, releaseDate:'2024-09-19'},
+    {id:'is-e8', name:'E.G.O::크리스마스 악몽 이스마엘', grade:'HE', season:5, releaseDate:'2024-12-26', source:'event'},
+    {id:'is-e2', name:'E.G.O::즉저살 [蝍蛆殺] 이스마엘', grade:'ZAYIN', season:6, releaseDate:'2025-05-22', source:'pass'},
+    {id:'is-e9', name:'E.G.O::파도의 만가 이스마엘', grade:'HE', season:null, releaseDate:'2025-09-25', source:'collab'},
   ],
   'rodion':[
-    /* ZAYIN */
-    {id:'ro-e1',  name:'E.G.O::던져지는 것 로쟈',       grade:'ZAYIN', season:0},
-    {id:'ro-e9',  name:'E.G.O::노을 속으로 로쟈',                grade:'ZAYIN', season:'event'},
-    /* TETH */
-    {id:'ro-e2',  name:'E.G.O::얼음다리 로쟈',          grade:'TETH',  season:0},
-    {id:'ro-e3',  name:'E.G.O::들끓는 부식 로쟈',       grade:'TETH',  season:0},
-    {id:'ro-e10', name:'E.G.O::거울촉각 로쟈',                  grade:'TETH',  season:8},
-    /* HE */
-    {id:'ro-e4',  name:'E.G.O::4번째 성냥불 로쟈',      grade:'HE',    season:2},
-    {id:'ro-e5',  name:'E.G.O::집행 로쟈',              grade:'HE',    season:2},
-    {id:'ro-e6',  name:'E.G.O::저주못 로쟈',            grade:'HE',    season:5},
-    /* WAW */
-    {id:'ro-e7',  name:'E.G.O::핏빛욕망 로쟈',          grade:'WAW',   season:'vp'},
-    {id:'ro-e8',  name:'E.G.O::지정 재판 로쟈',         grade:'WAW',   season:6},
+    {id:'ro-e1', name:'E.G.O::던져지는 것 로쟈', grade:'ZAYIN', season:0, releaseDate:'2023-02-27', source:'base'},
+    {id:'ro-e4', name:'E.G.O::4번째 성냥불 로쟈', grade:'HE', season:1, releaseDate:'2023-02-27', source:'pass'},
+    {id:'ro-e2', name:'E.G.O::얼음다리 로쟈', grade:'TETH', season:1, releaseDate:'2023-02-27', source:'pass'},
+    {id:'ro-e3', name:'E.G.O::들끓는 부식 로쟈', grade:'TETH', season:3, releaseDate:'2023-11-30', source:'pass'},
+    {id:'ro-e5', name:'E.G.O::집행 로쟈', grade:'HE', season:0, releaseDate:'2023-12-14'},
+    {id:'ro-e7', name:'E.G.O::핏빛욕망 로쟈', grade:'WAW', season:null, releaseDate:'2024-05-02', source:'vp'},
+    {id:'ro-e6', name:'E.G.O::저주못 로쟈', grade:'HE', season:5, releaseDate:'2024-10-24', source:'pass'},
+    {id:'ro-e8', name:'E.G.O::지정 재판 로쟈', grade:'WAW', season:5, releaseDate:'2025-04-17'},
+    {id:'ro-e9', name:'E.G.O::노을 속으로 로쟈', grade:'ZAYIN', season:7, releaseDate:'2026-04-30', source:'event'},
+    {id:'ro-e10', name:'E.G.O::거울촉각 로쟈', grade:'TETH', season:8, releaseDate:'2026-09-24', source:'pass'},
   ],
   'sinclair':[
-    /* ZAYIN */
-    {id:'si-e1',  name:'E.G.O::지식나무의 가지 싱클레어', grade:'ZAYIN', season:0},
-    {id:'si-e2',  name:'E.G.O::낮은울음 싱클레어',        grade:'ZAYIN', season:0},
-    /* TETH */
-    {id:'si-e3',  name:'E.G.O::다가올날 싱클레어',        grade:'TETH',  season:0},
-    {id:'si-e4',  name:'E.G.O::평생 스튜 싱클레어',       grade:'TETH',  season:0},
-    {id:'si-e5',  name:'E.G.O::저주못 싱클레어',          grade:'TETH',  season:0},
-    /* HE */
-    {id:'si-e6',  name:'E.G.O::초롱 싱클레어',            grade:'HE',    season:0},
-    {id:'si-e7',  name:'E.G.O::9장 2절 싱클레어',         grade:'HE',    season:1},
-    {id:'si-e8',  name:'E.G.O::하모니 싱클레어',          grade:'HE',    season:'vp'},
-    /* WAW */
-    {id:'si-e9',  name:'E.G.O::오혈읍루 [汚血泣淚] 싱클레어', grade:'WAW', season:7},
+    {id:'si-e1', name:'E.G.O::지식나무의 가지 싱클레어', grade:'ZAYIN', season:0, releaseDate:'2023-02-27', source:'base'},
+    {id:'si-e3', name:'E.G.O::다가올날 싱클레어', grade:'TETH', season:1, releaseDate:'2023-02-27', source:'pass'},
+    {id:'si-e4', name:'E.G.O::평생 스튜 싱클레어', grade:'TETH', season:1, releaseDate:'2023-04-20', source:'event'},
+    {id:'si-e6', name:'E.G.O::초롱 싱클레어', grade:'HE', season:0, releaseDate:'2023-10-05'},
+    {id:'si-e7', name:'E.G.O::9장 2절 싱클레어', grade:'HE', season:3, releaseDate:'2023-11-30', source:'pass'},
+    {id:'si-e2', name:'E.G.O::낮은울음 싱클레어', grade:'ZAYIN', season:0, releaseDate:'2024-05-30'},
+    {id:'si-e5', name:'E.G.O::저주못 싱클레어', grade:'TETH', season:5, releaseDate:'2024-10-24', source:'pass'},
+    {id:'si-e9', name:'E.G.O::오혈읍루 [汚血泣淚] 싱클레어', grade:'WAW', season:6, releaseDate:'2025-05-29', source:'pass'},
+    {id:'si-e8', name:'E.G.O::하모니 싱클레어', grade:'HE', season:null, releaseDate:'2026-03-05', source:'vp'},
   ],
   'outis':[
-    /* ZAYIN */
-    {id:'ou-e1',  name:'E.G.O::토 파토스 마토스 오티스',  grade:'ZAYIN', season:0},
-    {id:'ou-e2',  name:'E.G.O::난 가위를 낼게, 너는? 오티스', grade:'ZAYIN', season:7},
-    /* TETH */
-    {id:'ou-e3',  name:'E.G.O::공즉시색 오티스',          grade:'TETH',  season:0},
-    {id:'ou-e4',  name:'E.G.O::여우비 오티스',            grade:'TETH',  season:0},
-    /* HE */
-    {id:'ou-e5',  name:'E.G.O::검은줄기 오티스',          grade:'HE',    season:2},
-    {id:'ou-e6',  name:'E.G.O::홀리데이 오티스',          grade:'HE',    season:3},
-    {id:'ou-e7',  name:'E.G.O::차원찢개 오티스',          grade:'HE',    season:6},
-    {id:'ou-e8',  name:'E.G.O::마탄 오티스',              grade:'HE',    season:4},
-    /* WAW */
-    {id:'ou-e9',  name:'E.G.O::구속 오티스',              grade:'WAW',   season:5},
-    /* 발푸밤 */
-    {id:'ou-evp', name:'E.G.O::HE 마탄 오티스',           grade:'WAW',   season:'vp'},
+    {id:'ou-e1', name:'E.G.O::토 파토스 마토스 오티스', grade:'ZAYIN', season:0, releaseDate:'2023-02-27', source:'base'},
+    {id:'ou-e5', name:'E.G.O::검은줄기 오티스', grade:'HE', season:1, releaseDate:'2023-02-27', source:'pass'},
+    {id:'ou-e3', name:'E.G.O::공즉시색 오티스', grade:'TETH', season:0, releaseDate:'2023-02-27'},
+    {id:'ou-e4', name:'E.G.O::여우비 오티스', grade:'TETH', season:2, releaseDate:'2023-06-08', source:'pass'},
+    {id:'ou-e6', name:'E.G.O::홀리데이 오티스', grade:'HE', season:3, releaseDate:'2023-12-28', source:'event'},
+    {id:'ou-e9', name:'E.G.O::구속 오티스', grade:'WAW', season:4, releaseDate:'2024-04-11', source:'pass'},
+    {id:'ou-e7', name:'E.G.O::차원찢개 오티스', grade:'HE', season:4, releaseDate:'2024-08-08', source:'event'},
+    {id:'ou-e8', name:'E.G.O::마탄 오티스', grade:'HE', season:null, releaseDate:'2025-01-09', source:'vp'},
+    {id:'ou-e2', name:'E.G.O::난 가위를 낼게, 너는? 오티스', grade:'ZAYIN', season:7, releaseDate:'2026-01-08', source:'pass'},
   ],
   'gregor':[
-    /* ZAYIN */
-    {id:'gr-e1',  name:'E.G.O::어느날 갑자기 그레고르',  grade:'ZAYIN', season:0},
-    {id:'gr-e2',  name:'E.G.O::눈속임 그레고르',         grade:'ZAYIN', season:0},
-    /* TETH */
-    {id:'gr-e3',  name:'E.G.O::초롱 그레고르',           grade:'TETH', season:0},
-    {id:'gr-e4',  name:'E.G.O::지난 날 그레고르',        grade:'TETH', season:0},
-    {id:'gr-e10', name:'E.G.O::입주 신고 그레고르',               grade:'TETH',  season:7},
-    /* HE */
-    {id:'gr-e5',  name:'E.G.O::AEDD 그레고르',           grade:'HE', season:2},
-    {id:'gr-e6',  name:'E.G.O::엄숙한 애도 그레고르',    grade:'HE', season:0},
-    {id:'gr-e7',  name:'E.G.O::크리스마스 악몽 그레고르', grade:'HE', season:'event'},
-    /* WAW */
-    {id:'gr-e8',  name:'E.G.O::가시 화원 그레고르',      grade:'WAW', season:0},
-    {id:'gr-e9',  name:'E.G.O::눈부시지 않은 영광 그레고르', grade:'WAW', season:0},
+    {id:'gr-e1', name:'E.G.O::어느날 갑자기 그레고르', grade:'ZAYIN', season:0, releaseDate:'2023-02-27', source:'base'},
+    {id:'gr-e2', name:'E.G.O::눈속임 그레고르', grade:'ZAYIN', season:1, releaseDate:'2023-02-27', source:'pass'},
+    {id:'gr-e3', name:'E.G.O::초롱 그레고르', grade:'TETH', season:0, releaseDate:'2023-02-27'},
+    {id:'gr-e5', name:'E.G.O::AEDD 그레고르', grade:'HE', season:2, releaseDate:'2023-06-15', source:'pass'},
+    {id:'gr-e8', name:'E.G.O::가시 화원 그레고르', grade:'WAW', season:3, releaseDate:'2024-03-14'},
+    {id:'gr-e4', name:'E.G.O::지난 날 그레고르', grade:'TETH', season:4, releaseDate:'2024-04-04', source:'pass'},
+    {id:'gr-e6', name:'E.G.O::엄숙한 애도 그레고르', grade:'HE', season:null, releaseDate:'2024-09-05', source:'vp'},
+    {id:'gr-e7', name:'E.G.O::크리스마스 악몽 그레고르', grade:'HE', season:5, releaseDate:'2024-12-26', source:'event'},
+    {id:'gr-e9', name:'E.G.O::눈부시지 않은 영광 그레고르', grade:'WAW', season:null, releaseDate:'2025-09-25', source:'collab'},
+    {id:'gr-e10', name:'E.G.O::입주 신고 그레고르', grade:'TETH', season:7, releaseDate:'2026-09-03'},
   ],
 };
 
+/* 중복 항목을 통합하기 전 브라우저에 저장된 ID. */
+const LEGACY_CATALOG_IDS = {
+  'ry-evp':'ry-vp-3a',
+  'fa-s3-3a':'fa-s0-3a',
+  'hl-s5-3a':'hl-vp-3a',
+  'me-e3':'me-evp',
+  'ou-evp':'ou-e8',
+};
+
 /* ── 상태 ── */
-let owned = new Set(JSON.parse(localStorage.getItem('lc-owned')||'[]'));
+function loadCatalogSelection(key, canKeep = () => true) {
+  const saved = JSON.parse(localStorage.getItem(key) || '[]');
+  const migrated = new Set(saved.map(id => LEGACY_CATALOG_IDS[id] ?? id).filter(canKeep));
+  if(migrated.size !== saved.length || saved.some(id => !migrated.has(id))) {
+    localStorage.setItem(key, JSON.stringify([...migrated]));
+  }
+  return migrated;
+}
+
+let owned = loadCatalogSelection('lc-owned');
 let collapsed = new Set(JSON.parse(localStorage.getItem('lc-collapsed')||'[]'));
 let shards = JSON.parse(localStorage.getItem('lc-shards')||'{}');
 let bonusActive = false;
@@ -1079,7 +973,10 @@ function sw(id) {
 
 /* ── 목표 인격 ── */
 let targetFilter = 'all';
-let targetSel = new Set(JSON.parse(localStorage.getItem('lc-target')||'[]')); // 선택된 인격 id Set
+let targetSel = loadCatalogSelection('lc-target', id => {
+  const entry = getIdentityById(id);
+  return entry && entry.identity.source !== 'collab' && !owned.has(id);
+});
 
 const saveTarget = () => localStorage.setItem('lc-target', JSON.stringify([...targetSel]));
 
@@ -1091,9 +988,10 @@ function setTargetFilter(f, btn) {
 }
 
 function targetFilterFn(id) {
+  if(id.source==='collab') return false;
   if(targetFilter==='all') return true;
-  if(targetFilter==='ego') return id.id.includes('-e') || id.season==='vp' || id.season==='event';
-  if(targetFilter==='vp') return id.season==='vp';
+  if(targetFilter==='ego') return typeof id.grade === 'string';
+  if(targetFilter==='vp') return id.source==='vp';
   // ★2/★3 필터: 에고 등급 문자열 포함 처리
   const g = id.grade;
   if(targetFilter==='3') return g===3 || g==='HE' || g==='WAW' || g==='QLIPHOTH';
@@ -1178,6 +1076,21 @@ function gradeLabel(id, isEgo) {
   return `★${id.grade}`;
 }
 
+function renderCatalogMetadata(item) {
+  const seasonLabel = item.season ? `S${item.season}` : '통상';
+  const tags = {
+    base: ['기본', '#5a5248'],
+    vp: ['발푸밤', '#5aaa66'],
+    collab: ['콜라보', '#6899c8'],
+    pass: [`${seasonLabel} 패스`, '#c8a96e'],
+    event: [`${seasonLabel} 이벤트`, '#c46c5a'],
+    'event-reward': [`${seasonLabel} 이벤트 보상`, '#c46c5a'],
+  };
+  const [label, color] = tags[item.source] || [seasonLabel, item.season ? '#c8a96e' : '#5a5248'];
+  return `<span style="font-size:13px;padding:2px 7px;border-radius:2px;background:${color}22;color:${color};border:1px solid ${color}44;">${label}</span>
+    <time datetime="${item.releaseDate}" style="font-size:11px;color:var(--text2);">${item.releaseDate}</time>`;
+}
+
 function toggleTargetSel(iid) {
   const isPair = WEDGE_PAIR.includes(iid);
   const selected = targetSel.has(iid);
@@ -1193,8 +1106,6 @@ function toggleTargetSel(iid) {
       const id = r.identity;
       const isSel = targetSel.has(iid);
       const isEgo = isEgoId(iid);
-      const sLabel = id.season==='vp'?'발푸밤':id.season==='event'?'이벤트':id.season===0?'통상':`S${id.season}`;
-      const sColor = id.season==='vp'?'#5aaa66':id.season==='event'?'#c46c5a':id.season===0?'#5a5248':'#c8a96e';
       const gl = isEgo ? id.grade : `★${id.grade}`;
       card.style.borderColor = isSel ? 'var(--gold)' : '';
       card.style.background  = isSel ? 'var(--gold-dim)' : '';
@@ -1204,9 +1115,9 @@ function toggleTargetSel(iid) {
           ${isSel?'✓':''}
         </div>
         <div class="id-name" style="${isSel?'color:var(--gold2);':''}">${id.name}</div>
-        <div class="id-grade" style="display:flex;align-items:center;gap:6px;margin-top:4px;">
+        <div class="id-grade" style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-top:4px;">
           <span style="${isSel?'color:var(--gold);':''}">${gl}</span>
-          <span style="font-size:13px;padding:2px 7px;border-radius:2px;background:${sColor}22;color:${sColor};border:1px solid ${sColor}44;">${sLabel}</span>
+          ${renderCatalogMetadata(id)}
         </div>`;
       // onclick 재연결 (innerHTML 교체 시 이벤트 유지)
       card.onclick = () => toggleTargetSel(iid);
@@ -1295,8 +1206,6 @@ function renderTargetList() {
         <div style="font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--text3);text-transform:uppercase;margin:8px 0 6px;padding-left:2px;">${label}</div>
         <div class="id-grid" style="margin-bottom:10px;">
           ${items.map(id => {
-            const sLabel = id.season==='vp'?'발푸밤':id.season==='event'?'이벤트':id.season===0?'통상':`S${id.season}`;
-            const sColor = id.season==='vp'?'#5aaa66':id.season==='event'?'#c46c5a':id.season===0?'#5a5248':'#c8a96e';
             const isSel  = targetSel.has(id.id);
             const gl     = isEgoCat ? id.grade : `★${id.grade}`;
             return `
@@ -1306,9 +1215,9 @@ function renderTargetList() {
                 ${isSel?'✓':''}
               </div>
               <div class="id-name" style="${isSel?'color:var(--gold2);':''}">${id.name}</div>
-              <div class="id-grade" style="display:flex;align-items:center;gap:6px;margin-top:4px;">
+              <div class="id-grade" style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-top:4px;">
                 <span style="${isSel?'color:var(--gold);':''}">${gl}</span>
-                <span style="font-size:13px;padding:2px 7px;border-radius:2px;background:${sColor}22;color:${sColor};border:1px solid ${sColor}44;">${sLabel}</span>
+                ${renderCatalogMetadata(id)}
               </div>
             </div>`;
           }).join('')}
@@ -1529,8 +1438,8 @@ function filterFn(id) {
   if(curFilter==='all') return true;
   if(curFilter==='owned') return owned.has(id.id);
   if(curFilter==='missing') return !owned.has(id.id);
-  if(curFilter==='ego') return id.season==='ego'||id.season==='vp'||id.season==='event'||id.id.includes('-e');
-  if(curFilter==='vp') return id.season==='vp';
+  if(curFilter==='ego') return typeof id.grade === 'string';
+  if(curFilter==='vp' || curFilter==='collab') return id.source===curFilter;
   const g = id.grade;
   if(curFilter==='3') return g===3 || g==='HE' || g==='WAW' || g==='QLIPHOTH';
   if(curFilter==='2') return g===2 || g==='TETH' || g==='ZAYIN';
@@ -1619,16 +1528,14 @@ function renderCollection() {
         <div style="font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--text3);text-transform:uppercase;margin:8px 0 6px;padding-left:2px;">${label}</div>
         <div class="id-grid" style="max-height:none;margin-bottom:10px;">
           ${items.map(id=>{
-            const sLabel = id.season==='vp'?'발푸밤':id.season==='event'?'이벤트':id.season==='ego'?'에고':id.season===0?'통상':`S${id.season}`;
-            const sColor = id.season==='vp'?'#5aaa66':id.season==='event'?'#c46c5a':id.season===0?'#5a5248':'#c8a96e';
             const gl = isEgoCat ? id.grade : `★${id.grade}`;
             return `
             <div class="id-card ${owned.has(id.id)?'owned':''}" data-id="${id.id}" onclick="toggleId('${id.id}')">
               <div class="id-check">✓</div>
               <div class="id-name">${id.name}</div>
-              <div class="id-grade" style="display:flex;align-items:center;gap:6px;margin-top:4px;">
+              <div class="id-grade" style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-top:4px;">
                 <span>${gl}</span>
-                <span style="font-size:13px;padding:2px 7px;border-radius:2px;background:${sColor}22;color:${sColor};border:1px solid ${sColor}44;">${sLabel}</span>
+                ${renderCatalogMetadata(id)}
               </div>
             </div>`;
           }).join('')}
