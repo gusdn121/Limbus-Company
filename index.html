@@ -16,15 +16,15 @@
   --gold: #c8a96e;
   --gold2: #e2c98a;
   --gold-dim: rgba(200,169,110,0.15);
-  --red: #c45c4a;
+  --red: #e58c7e;
   --red-dim: rgba(196,92,74,0.15);
   --green: #7ab87a;
   --text: #e8e0d0;
-  --text2: #9e9080;
-  --text3: #5a5248;
+  --text2: #c7b8a4;
+  --text3: #baa58b;
   --serif: 'Noto Serif KR', serif;
   --sans: 'Noto Sans KR', sans-serif;
-  --mono: 'DM Mono', monospace;
+  --mono: 'DM Mono', 'Noto Sans KR', monospace;
 }
 html.light {
   --bg: #f5f2ed;
@@ -96,9 +96,9 @@ main{max-width:960px;margin:0 auto;padding:2.5rem 2rem 5rem}
 
 .admin-theme {
   --menu-cut: polygon(12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px), 0 12px);
-  --menu-ink: #f5dfb7;
+  --menu-ink: #f9ead2;
   --menu-accent: #ffda94;
-  --menu-muted: #c0a887;
+  --menu-muted: #dfc8ac;
   --menu-rim: linear-gradient(158deg, #a37648, #61412c 28%, #341f1b 63%, #8f6039);
   --menu-screen: #15110f;
   --menu-scanline: #0003;
@@ -307,7 +307,7 @@ a.menu-card--small:hover { border-color: var(--menu-badge-ink); }
   --gold2: var(--menu-accent);
   --gold-dim: color-mix(in srgb, var(--menu-badge-ink) 13%, transparent);
   --text: var(--menu-ink);
-  --text2: var(--menu-muted);
+  --text2: var(--menu-ink);
   --text3: var(--menu-muted);
 }
 .dispenser-workspace .menu-screen { padding-top: 17px; }
@@ -340,6 +340,37 @@ a.menu-card--small:hover { border-color: var(--menu-badge-ink); }
   color: var(--menu-badge);
 }
 .dispenser-workspace .calc-btn:hover { background: var(--menu-main-hover); }
+.dispenser-workspace :is(.filter-btn, .guide-toggle, .sec, .stat-label, .m-label) { font-weight: 500; }
+.catalog-group-label {
+  margin: 8px 0 6px 2px;
+  color: var(--text3);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+}
+.shard-metric-label {
+  margin-bottom: 3px;
+  color: var(--text3);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+}
+.catalog-tag {
+  --tag-color: var(--text3);
+  padding: 2px 7px;
+  border: 1px solid color-mix(in srgb, var(--tag-color) 42%, transparent);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--tag-color) 10%, transparent);
+  color: var(--tag-color);
+  font-size: 13px;
+}
+.catalog-tag--season { --tag-color: var(--gold); }
+.catalog-tag--vp { --tag-color: #9ad3ab; }
+.catalog-tag--collab { --tag-color: #a6cbee; }
+.catalog-tag--event { --tag-color: #f3ad9e; }
+.light .catalog-tag--vp { --tag-color: #2f6040; }
+.light .catalog-tag--collab { --tag-color: #315479; }
+.light .catalog-tag--event { --tag-color: #873a2e; }
 
 @media(max-width:600px) {
   .site-header-inner { padding-inline: 1rem; }
@@ -519,13 +550,13 @@ a.menu-card--small:hover { border-color: var(--menu-badge-ink); }
         <a class="tool-back" href="#home">← 관리자 메뉴</a>
         <div class="menu-heading"><h1 id="dispenser-title" tabindex="-1">인격 자판기</h1></div>
         <nav class="tool-tabs" id="dispenser-tabs" aria-label="인격 자판기 메뉴">
-          <a class="nav-btn" href="#dispenser">파편 / 거울던전</a>
+          <a class="nav-btn" href="#dispenser">파편 계산</a>
           <a class="nav-btn" href="#target">목표 인격</a>
           <a class="nav-btn" href="#collection">인격 보관함</a>
         </nav>
 
   <!-- 파편 / 거울던전 -->
-  <div class="panel" id="p-calc">
+  <div class="panel" id="p-calc" hidden>
     <button class="guide-toggle" onclick="toggleGuide('guide-calc',this)"><span class="g-arrow">▶</span> 사용 방법 안내</button>
     <div class="guide-box" id="guide-calc">
       <h4>① <a href="#collection">인격 보관함</a></h4>
@@ -602,7 +633,7 @@ a.menu-card--small:hover { border-color: var(--menu-badge-ink); }
   </div>
 
   <!-- 목표 인격 -->
-  <div class="panel" id="p-target">
+  <div class="panel" id="p-target" hidden>
     <button class="guide-toggle" onclick="toggleGuide('guide-target',this)"><span class="g-arrow">▶</span> 사용 방법 안내</button>
     <div class="guide-box" id="guide-target">
       <h4>목표 인격 선택</h4>
@@ -627,7 +658,7 @@ a.menu-card--small:hover { border-color: var(--menu-badge-ink); }
       <div id="target-summary-detail"></div>
       <div style="margin-top:1rem;">
         <button class="filter-btn" style="color:var(--red);border-color:rgba(196,92,74,.3);" onclick="clearTargetSel()">선택 초기화</button>
-        <span style="font-size:11px;color:var(--text2);margin-left:10px;">패스·보너스 설정은 <a class="settings-link" href="#dispenser">파편 / 거울던전</a>에서 변경</span>
+        <span style="font-size:11px;color:var(--text2);margin-left:10px;">패스·보너스 설정은 <a class="settings-link" href="#dispenser">파편 계산</a>에서 변경</span>
       </div>
     </div>
 
@@ -643,7 +674,7 @@ a.menu-card--small:hover { border-color: var(--menu-badge-ink); }
   </div>
 
   <!-- 인격 보관함 -->
-  <div class="panel" id="p-collection">
+  <div class="panel" id="p-collection" hidden>
     <button class="guide-toggle" onclick="toggleGuide('guide-coll',this)"><span class="g-arrow">▶</span> 사용 방법 안내</button>
     <div class="guide-box" id="guide-coll">
       <h4>보유 여부 체크</h4>
@@ -1288,7 +1319,9 @@ function renderToolView(moveFocus = false) {
   mirror.hidden = screen !== mirror;
 
   for(const panel of workspace.querySelectorAll('.panel')) {
-    panel.classList.toggle('on', panel.id === 'p-' + tab);
+    const active = screen === workspace && panel.id === 'p-' + tab;
+    panel.hidden = !active;
+    panel.classList.toggle('on', active);
   }
   for(const link of document.querySelectorAll('#dispenser-tabs .nav-btn')) {
     if(link.hash === location.hash) link.setAttribute('aria-current', 'page');
@@ -1416,15 +1449,15 @@ function gradeLabel(id, isEgo) {
 function renderCatalogMetadata(item) {
   const seasonLabel = item.season ? `S${item.season}` : '통상';
   const tags = {
-    base: ['기본', '#5a5248'],
-    vp: ['발푸밤', '#5aaa66'],
-    collab: ['콜라보', '#6899c8'],
-    pass: [`${seasonLabel} 패스`, '#c8a96e'],
-    event: [`${seasonLabel} 이벤트`, '#c46c5a'],
-    'event-reward': [`${seasonLabel} 이벤트 보상`, '#c46c5a'],
+    base: ['기본', 'neutral'],
+    vp: ['발푸밤', 'vp'],
+    collab: ['콜라보', 'collab'],
+    pass: [`${seasonLabel} 패스`, 'season'],
+    event: [`${seasonLabel} 이벤트`, 'event'],
+    'event-reward': [`${seasonLabel} 이벤트 보상`, 'event'],
   };
-  const [label, color] = tags[item.source] || [seasonLabel, item.season ? '#c8a96e' : '#5a5248'];
-  return `<span style="font-size:13px;padding:2px 7px;border-radius:2px;background:${color}22;color:${color};border:1px solid ${color}44;">${label}</span>`;
+  const [label, tone] = tags[item.source] || [seasonLabel, item.season ? 'season' : 'neutral'];
+  return `<span class="catalog-tag catalog-tag--${tone}">${label}</span>`;
 }
 
 function toggleTargetSel(iid) {
@@ -1521,7 +1554,7 @@ function renderTargetList() {
     const cardHtml = (items, label, isEgoCat) => {
       if(!items.length) return '';
       return `
-        <div style="font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--text3);text-transform:uppercase;margin:8px 0 6px;padding-left:2px;">${label}</div>
+        <div class="catalog-group-label">${label}</div>
         <div class="id-grid" style="margin-bottom:10px;">
           ${items.map(id => {
             const isSel  = targetSel.has(id.id);
@@ -1610,15 +1643,15 @@ function renderCalcShardList() {
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
             <div style="background:var(--bg3);border-radius:4px;padding:8px 10px;">
-              <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:3px;">필요 파편</div>
+              <div class="shard-metric-label">필요 파편</div>
               <div style="font-size:16px;font-weight:500;color:var(--text);">${needTotal}</div>
             </div>
             <div style="background:var(--bg3);border-radius:4px;padding:8px 10px;">
-              <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:3px;">최대 필요 상자</div>
+              <div class="shard-metric-label">최대 필요 상자</div>
               <div style="font-size:16px;font-weight:500;color:${short>0?'var(--red)':'var(--green)'};">${short>0?shardsToBoxes(short)+'개':'충분'}</div>
             </div>
             <div style="background:var(--bg3);border-radius:4px;padding:8px 10px;">
-              <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:3px;">거울던전</div>
+              <div class="shard-metric-label">거울던전</div>
               <div style="font-size:16px;font-weight:500;color:var(--gold);">${short>0?getRunsNeeded(short)+'판':'-'}</div>
             </div>
           </div>
@@ -1626,7 +1659,7 @@ function renderCalcShardList() {
     }
 
     if(withShard.length > 0) {
-      html += `<div style="font-family:var(--mono);font-size:9px;letter-spacing:.15em;color:var(--text3);text-transform:uppercase;margin:12px 0 6px 2px;">기타 보유 파편</div>`;
+      html += `<div class="catalog-group-label">기타 보유 파편</div>`;
       html += `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:6px;">`;
       html += withShard.map(({p, have}) => `
         <div style="background:var(--bg2);border:1px solid var(--border);border-radius:5px;padding:10px 12px;display:flex;align-items:center;gap:8px;">
@@ -1840,7 +1873,7 @@ function renderCollection() {
     const cardHtml = (items, label, isEgoCat) => {
       if(!items.length) return '';
       return `
-        <div style="font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--text3);text-transform:uppercase;margin:8px 0 6px;padding-left:2px;">${label}</div>
+        <div class="catalog-group-label">${label}</div>
         <div class="id-grid" style="max-height:none;margin-bottom:10px;">
           ${items.map(id=>{
             const gl = isEgoCat ? id.grade : `★${id.grade}`;
@@ -1864,7 +1897,7 @@ function renderCollection() {
         <div class="p-hname">${p.name}</div>
         <div class="p-hcount" id="hcount-${p.id}">${oc}/${allItems.length}</div>
         <div class="id-shard-row" style="margin:0;padding:0;border:none;gap:6px;" onclick="event.stopPropagation()">
-          <label style="font-size:10px;color:var(--text3);font-family:var(--mono);white-space:nowrap;">파편</label>
+          <label>파편</label>
           <input class="id-shard-input" type="number" min="0" value="${savedShard}" placeholder="0" style="width:64px;"
             onchange="saveShard('${p.id}', this.value)"
             oninput="saveShard('${p.id}', this.value)">
