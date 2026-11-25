@@ -94,7 +94,7 @@ main{max-width:960px;margin:0 auto;padding:2.5rem 2rem 5rem}
 }
 .light .site-brand { color: #542824; }
 
-.admin-home {
+.admin-theme {
   --menu-cut: polygon(12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px), 0 12px);
   --menu-ink: #f5dfb7;
   --menu-accent: #ffda94;
@@ -112,7 +112,7 @@ main{max-width:960px;margin:0 auto;padding:2.5rem 2rem 5rem}
   --menu-badge-ink: #f0bf69;
   color: var(--menu-ink);
 }
-.light .admin-home {
+.light .admin-theme {
   --menu-ink: #3e2820;
   --menu-accent: #4e2020;
   --menu-muted: #6a5140;
@@ -298,6 +298,49 @@ a.menu-card--small:hover { border-color: var(--menu-badge-ink); }
 }
 .nav-btn[aria-current="page"] { border-color: var(--gold); background: var(--red-dim); color: var(--gold2); }
 
+.dispenser-workspace {
+  --bg2: color-mix(in srgb, var(--menu-screen) 65%, var(--menu-land));
+  --bg3: var(--menu-land);
+  --border: color-mix(in srgb, var(--menu-rule) 72%, transparent);
+  --border2: var(--menu-rule);
+  --gold: var(--menu-badge-ink);
+  --gold2: var(--menu-accent);
+  --gold-dim: color-mix(in srgb, var(--menu-badge-ink) 13%, transparent);
+  --text: var(--menu-ink);
+  --text2: var(--menu-muted);
+  --text3: var(--menu-muted);
+}
+.dispenser-workspace .menu-screen { padding-top: 17px; }
+.dispenser-workspace .tool-back { margin-bottom: 5px; }
+.dispenser-workspace .tool-tabs { margin-bottom: 20px; }
+.dispenser-workspace :is(.nav-btn, .card, .m-card, .stat-card, .guide-toggle, .guide-box,
+  .id-card, .id-check, .filter-btn, .reset-btn, .calc-btn) {
+  border-radius: 0;
+}
+.dispenser-workspace :is(.nav-btn, .p-header, .m-card, .stat-card, .id-card) {
+  background: repeating-linear-gradient(0deg, var(--menu-scanline) 0 1px, transparent 1px 4px), var(--menu-secondary);
+}
+.dispenser-workspace .p-header {
+  padding: 10px 9px;
+  border: 1px solid var(--menu-rule);
+}
+.dispenser-workspace .id-card { border-color: var(--menu-rule); }
+.dispenser-workspace .id-name { color: var(--text); }
+.dispenser-workspace .id-card:hover { border-color: var(--gold); }
+.dispenser-workspace :is(.nav-btn[aria-current="page"], .filter-btn.on, .calc-btn, .id-card:is(.owned,.t-sel)) {
+  border-color: var(--gold);
+  background: repeating-linear-gradient(0deg, var(--menu-scanline) 0 1px, transparent 1px 4px), var(--menu-main);
+  color: var(--gold2);
+}
+.dispenser-workspace :is(.id-card:is(.owned,.t-sel) .id-name, .calc-btn:hover) { color: var(--gold2); }
+.dispenser-workspace .id-card:is(.owned,.t-sel) .id-grade { color: var(--gold); }
+.dispenser-workspace .id-card:is(.owned,.t-sel) .id-check {
+  border-color: var(--gold);
+  background: var(--gold);
+  color: var(--menu-badge);
+}
+.dispenser-workspace .calc-btn:hover { background: var(--menu-main-hover); }
+
 @media(max-width:600px) {
   .site-header-inner { padding-inline: 1rem; }
 }
@@ -308,6 +351,8 @@ a.menu-card--small:hover { border-color: var(--menu-badge-ink); }
   .menu-card--primary { grid-column: 1 / -1; grid-row: auto; min-height: 145px; }
   .menu-card--small { min-height: 65px; padding: 9px; gap: 6px; font-size: 13px; }
   a.menu-card--small .menu-icon { display: none; }
+  .dispenser-workspace .tool-tabs .nav-btn { flex: 1 1 auto; justify-content: center; }
+  .dispenser-workspace .p-header { padding-inline: 7px; gap: 7px; }
 }
 
 /* labels */
@@ -437,7 +482,7 @@ a.menu-card--small:hover { border-color: var(--menu-badge-ink); }
 </header>
 
 <main>
-  <section class="admin-home" id="admin-home" aria-labelledby="admin-title">
+  <section class="admin-home admin-theme" id="admin-home" aria-labelledby="admin-title">
     <div class="menu-rim">
       <div class="menu-screen">
         <div class="menu-heading"><h1 id="admin-title" tabindex="-1">관리자 메뉴</h1></div>
@@ -463,13 +508,21 @@ a.menu-card--small:hover { border-color: var(--menu-badge-ink); }
     </div>
   </section>
 
-  <div id="tool-workspace" hidden>
-  <a class="tool-back" href="#home">← 관리자 메뉴</a>
-  <h1 class="tool-heading" id="tool-title" tabindex="-1"></h1>
-  <nav class="tool-tabs" id="dispenser-tabs" aria-label="인격 자판기 메뉴" hidden>
-    <a class="nav-btn" href="#dispenser">목표 인격</a>
-    <a class="nav-btn" href="#collection">인격 보관함</a>
-  </nav>
+  <section id="mirror-dungeon-view" aria-labelledby="mirror-title" hidden>
+    <a class="tool-back" href="#home">← 관리자 메뉴</a>
+    <h1 class="tool-heading" id="mirror-title" tabindex="-1">거울던전</h1>
+  </section>
+
+  <section class="dispenser-workspace admin-theme" id="tool-workspace" aria-labelledby="dispenser-title" hidden>
+    <div class="menu-rim">
+      <div class="menu-screen">
+        <a class="tool-back" href="#home">← 관리자 메뉴</a>
+        <div class="menu-heading"><h1 id="dispenser-title" tabindex="-1">인격 자판기</h1></div>
+        <nav class="tool-tabs" id="dispenser-tabs" aria-label="인격 자판기 메뉴">
+          <a class="nav-btn" href="#dispenser">파편 / 거울던전</a>
+          <a class="nav-btn" href="#target">목표 인격</a>
+          <a class="nav-btn" href="#collection">인격 보관함</a>
+        </nav>
 
   <!-- 파편 / 거울던전 -->
   <div class="panel" id="p-calc">
@@ -479,7 +532,7 @@ a.menu-card--small:hover { border-color: var(--menu-badge-ink); }
       <ul>
         <li>수감자 섹션의 <b>파편 수 입력칸</b>에 현재 보유 파편 수를 입력하세요.</li>
       </ul>
-      <h4>② <a href="#dispenser">목표 인격</a></h4>
+      <h4>② <a href="#target">목표 인격</a></h4>
       <ul>
         <li>파편으로 뽑고 싶은 인격/에고 카드를 <b>클릭해서 선택</b>하세요. (복수 선택 가능)</li>
       </ul>
@@ -574,7 +627,7 @@ a.menu-card--small:hover { border-color: var(--menu-badge-ink); }
       <div id="target-summary-detail"></div>
       <div style="margin-top:1rem;">
         <button class="filter-btn" style="color:var(--red);border-color:rgba(196,92,74,.3);" onclick="clearTargetSel()">선택 초기화</button>
-        <span style="font-size:11px;color:var(--text2);margin-left:10px;">패스·보너스 설정은 <a class="settings-link" href="#mirror-dungeon">거울던전</a>에서 변경</span>
+        <span style="font-size:11px;color:var(--text2);margin-left:10px;">패스·보너스 설정은 <a class="settings-link" href="#dispenser">파편 / 거울던전</a>에서 변경</span>
       </div>
     </div>
 
@@ -626,7 +679,9 @@ a.menu-card--small:hover { border-color: var(--menu-badge-ink); }
     <div id="coll-body"></div>
   </div>
 
-  </div>
+      </div>
+    </div>
+  </section>
 </main>
 
 <footer style="border-top:1px solid var(--border);padding:2rem;text-align:center;font-size:11px;color:var(--text3);font-family:var(--mono);letter-spacing:.08em;">
@@ -1214,45 +1269,41 @@ function onMirrorSettingChange() {
 }
 
 /* ── 화면 이동 ── */
-const TOOL_VIEWS = new Map([
-  ['#mirror-dungeon', {tab:'calc', title:'거울던전'}],
-  ['#dispenser', {tab:'target', title:'인격 자판기'}],
-  ['#collection', {tab:'collection', title:'인격 자판기'}],
+const DISPENSER_TABS = new Map([
+  ['#dispenser', 'calc'],
+  ['#target', 'target'],
+  ['#collection', 'collection'],
 ]);
 
 function renderToolView(moveFocus = false) {
-  const view = TOOL_VIEWS.get(location.hash);
+  const tab = DISPENSER_TABS.get(location.hash);
   const home = document.getElementById('admin-home');
   const workspace = document.getElementById('tool-workspace');
-  const heading = document.getElementById('tool-title');
-  const tabs = document.getElementById('dispenser-tabs');
-  const screenChanged = home.hidden !== Boolean(view) || (view && heading.textContent !== view.title);
+  const mirror = document.getElementById('mirror-dungeon-view');
+  const screen = tab ? workspace : location.hash === '#mirror-dungeon' ? mirror : home;
+  const screenChanged = screen.hidden;
 
-  home.hidden = Boolean(view);
-  workspace.hidden = !view;
-  tabs.hidden = !view || view.tab === 'calc';
+  home.hidden = screen !== home;
+  workspace.hidden = screen !== workspace;
+  mirror.hidden = screen !== mirror;
 
   for(const panel of workspace.querySelectorAll('.panel')) {
-    panel.classList.toggle('on', panel.id === 'p-' + view?.tab);
+    panel.classList.toggle('on', panel.id === 'p-' + tab);
   }
-  for(const link of tabs.querySelectorAll('.nav-btn')) {
+  for(const link of document.querySelectorAll('#dispenser-tabs .nav-btn')) {
     if(link.hash === location.hash) link.setAttribute('aria-current', 'page');
     else link.removeAttribute('aria-current');
   }
 
-  if(view) {
-    heading.textContent = view.title;
-    if(view.tab === 'calc') renderCalcShardList();
-    if(view.tab === 'collection') renderCollection();
-    if(view.tab === 'target') {
-      renderTargetList();
-      calcTargetSummary();
-    }
+  if(tab === 'calc') renderCalcShardList();
+  if(tab === 'collection') renderCollection();
+  if(tab === 'target') {
+    renderTargetList();
+    calcTargetSummary();
   }
 
   if(moveFocus && screenChanged) {
-    const screenHeading = view ? heading : document.getElementById('admin-title');
-    screenHeading.focus({preventScroll:true});
+    screen.querySelector('h1').focus({preventScroll:true});
     window.scrollTo({top:0, behavior:'instant'});
   }
 }
@@ -1383,30 +1434,12 @@ function toggleTargetSel(iid) {
   ids.forEach(id => selected ? targetSel.delete(id) : targetSel.add(id));
   saveTarget();
   if(isPair) renderTargetList();
-  // 일반 항목은 해당 카드만 즉시 다시 그리기
+  // 일반 항목은 카드의 선택 표시만 갱신한다.
   const card = isPair ? null : document.querySelector(`[data-tid="${iid}"]`);
   if(card) {
-    const r = getIdentityById(iid);
-    if(r) {
-      const id = r.identity;
-      const isSel = targetSel.has(iid);
-      const isEgo = isEgoId(iid);
-      const gl = isEgo ? id.grade : `★${id.grade}`;
-      card.style.borderColor = isSel ? 'var(--gold)' : '';
-      card.style.background  = isSel ? 'var(--gold-dim)' : '';
-      card.classList.toggle('t-sel', isSel);
-      card.innerHTML = `
-        <div class="id-check" style="${isSel?'background:var(--gold);border-color:var(--gold);color:#1a1510;':''}">
-          ${isSel?'✓':''}
-        </div>
-        <div class="id-name" style="${isSel?'color:var(--gold2);':''}">${id.name}</div>
-        <div class="id-grade" style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-top:4px;">
-          <span style="${isSel?'color:var(--gold);':''}">${gl}</span>
-          ${renderCatalogMetadata(id)}
-        </div>`;
-      // onclick 재연결 (innerHTML 교체 시 이벤트 유지)
-      card.onclick = () => toggleTargetSel(iid);
-    }
+    const isSel = targetSel.has(iid);
+    card.classList.toggle('t-sel', isSel);
+    card.querySelector('.id-check').textContent = isSel ? '✓' : '';
   }
   calcTargetSummary();
   // calc 탭이 열려있으면 현황도 갱신
@@ -1494,14 +1527,11 @@ function renderTargetList() {
             const isSel  = targetSel.has(id.id);
             const gl     = isEgoCat ? id.grade : `★${id.grade}`;
             return `
-            <div class="id-card ${isSel?'t-sel':''}" data-tid="${id.id}" onclick="toggleTargetSel('${id.id}')"
-              style="cursor:pointer;${isSel?'border-color:var(--gold);background:var(--gold-dim);':''}">
-              <div class="id-check" style="${isSel?'background:var(--gold);border-color:var(--gold);color:#1a1510;':''}">
-                ${isSel?'✓':''}
-              </div>
-              <div class="id-name" style="${isSel?'color:var(--gold2);':''}">${id.name}</div>
+            <div class="id-card ${isSel?'t-sel':''}" data-tid="${id.id}" onclick="toggleTargetSel('${id.id}')">
+              <div class="id-check">${isSel?'✓':''}</div>
+              <div class="id-name">${id.name}</div>
               <div class="id-grade" style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-top:4px;">
-                <span style="${isSel?'color:var(--gold);':''}">${gl}</span>
+                <span>${gl}</span>
                 ${renderCatalogMetadata(id)}
               </div>
             </div>`;
@@ -1732,7 +1762,7 @@ function filterFn(id) {
 }
 function setFilter(f,btn) {
   curFilter=f;
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('#p-collection .filter-btn').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
   renderCollection();
 }
