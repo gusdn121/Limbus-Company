@@ -6,6 +6,10 @@
 <title>림버스 컴퍼니 — 재화 계산기</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mirror-dungeon/guide.css">
+<script defer src="mirror-dungeon/catalog.js"></script>
+<script defer src="mirror-dungeon/routes.js"></script>
+<script defer src="mirror-dungeon/guide.js"></script>
 <style>
 :root {
   --bg: #0d0c0b;
@@ -539,9 +543,65 @@ a.menu-card--small:hover { border-color: var(--menu-badge-ink); }
     </div>
   </section>
 
-  <section id="mirror-dungeon-view" aria-labelledby="mirror-title" hidden>
+  <section class="md-guide admin-theme" id="mirror-dungeon-view" aria-labelledby="mirror-title" hidden>
     <a class="tool-back" href="#home">← 관리자 메뉴</a>
-    <h1 class="tool-heading" id="mirror-title" tabindex="-1">거울던전</h1>
+    <header class="md-hero">
+      <div>
+        <p>시즌 8 · 시지프의 거울</p>
+        <h1 class="tool-heading" id="mirror-title" tabindex="-1">거울던전 15층 공략</h1>
+        <span>EXTREME · 제약 0</span>
+      </div>
+      <span class="md-seal" aria-hidden="true"><b>15F</b></span>
+    </header>
+    <div class="md-controls">
+      <div class="md-decks">
+        <h2 id="md-decks-title">덱 선택</h2>
+        <div id="md-decks" role="group" aria-labelledby="md-decks-title"></div>
+        <div id="md-variants" role="group" aria-label="혼합 편성" hidden></div>
+      </div>
+      <div class="md-search" id="md-search">
+        <label for="md-query">테마팩 찾기</label>
+        <input id="md-query" type="search" placeholder="팩 이름 입력" autocomplete="off" aria-controls="md-results">
+        <p class="md-sr" id="md-result-count" role="status"></p>
+        <ul id="md-results" hidden></ul>
+      </div>
+    </div>
+    <div class="md-board">
+      <nav class="md-route" aria-labelledby="md-route-title">
+        <h2 id="md-route-title">층별 진행</h2>
+        <div id="md-floors"></div>
+        <div class="md-checkpoint" id="md-checkpoint"></div>
+      </nav>
+      <section class="md-sheet" aria-labelledby="md-floor-title">
+        <header>
+          <h2 id="md-floor-title" tabindex="-1"></h2>
+          <span id="md-mode"></span>
+        </header>
+        <div class="md-pane">
+          <div class="md-packs" id="md-packs" role="group" aria-label="테마팩 선택"></div>
+          <div id="md-pack"></div>
+          <details class="md-details" id="md-recipes"></details>
+        </div>
+      </section>
+    </div>
+    <details class="md-details md-rules">
+      <summary>15층 진입과 진행 규칙</summary>
+      <dl>
+        <dt>진입</dt><dd>메인 9장 클리어 후 하드에서 평행중첩을 켜고 진행합니다. 5층 다음은 평행중첩, 10층 다음은 EXTREME입니다.</dd>
+        <dt>시작</dt><dd>선택한 키워드 기프트가 더 자주 나옵니다. 기프트 관측으로 III등급 이하 기프트를 최대 세 개 더 고를 수 있습니다.</dd>
+        <dt>팩과 보상</dt><dd>팩 관측 후보는 층과 난이도에 따라 달라집니다. 하드 층 클리어 보상에는 연결된 고난이 붙습니다.</dd>
+        <dt>상점</dt><dd>실제 발동하는 편성인지 확인한 뒤 합성·강화합니다. 10층까지 핵심 준비를 마치고, 후반에는 체력·정신력·보스 상성을 봅니다.</dd>
+      </dl>
+    </details>
+    <footer class="md-footer">
+      <span>추천 루트 · 게임 이미지 © Project Moon</span>
+      <nav aria-label="공략 참고 자료">
+        <a href="https://steamcommunity.com/games/1973530/announcements/detail/678511862081391683">공식 규칙</a>
+        <a href="https://limbus.haneuk.com/cardpacks">팩·이미지 출처</a>
+        <a href="https://www.youtube.com/watch?v=k8jxWamqGpA">15층 플레이 영상</a>
+      </nav>
+    </footer>
+    <noscript><p>덱과 층을 선택하려면 브라우저에서 자바스크립트를 켜 주세요.</p></noscript>
   </section>
 
   <section class="dispenser-workspace admin-theme" id="tool-workspace" aria-labelledby="dispenser-title" hidden>
